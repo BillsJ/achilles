@@ -9,7 +9,7 @@ Doesn't need to be used with jQuery, etc.
 
 ### achilles.EventEmitter
 Inherits from Node's EventEmitter, and therefore all its methods. The constructor takes one argument, an element. 
-Events assigned used `on`, can use event delegation. Example:
+Event delegation can be used. Example:
 
 ```js
 var Main = new achilles.EventEmitter(document.querySelector("main"));
