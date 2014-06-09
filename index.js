@@ -62,13 +62,55 @@ util.inherits(achilles.Controller, achilles.EventEmitter);
 
 achilles.Controller.prototype.render = function() {
 	if(this.template) {
-		this.template(this.scope, (function(err, html) {
+		this.template((function(err, html) {
 			this.el.innerHTML = html;
 			this.emit("render");
 		}).bind(this));
 	} else if(this.templateSync) {
-		this.el.innerHTML = this.templateSync(this.scope);
+		this.el.innerHTML = this.templateSync();
 		this.emit("render");
+	}
+};
+
+achilles.Object = function(base) {
+	this._data = {};
+};
+
+util.inherits(achilles.Object, events.EventEmitter);
+
+achilles.Object.prototype.define = function(key, type, initialValue) {
+	Object.defineProperty(this, key, {
+		get: function() {
+			return this._data[key];
+		},
+		set: function(val) {
+			if(type === String && typeof val === "string") {
+				this._data[key] = val;
+				this.emit("change");
+				this.emit("change:" + key);
+			} else if(type === String && typeof val.toString() === "string") {
+				this._data[key] = val.toString();
+				this.emit("change");
+				this.emit("change:" + key);
+			} else if(type === Number && typeof val === "number") {
+				this._data[key] = val;
+				this.emit("change");
+				this.emit("change:" + key);
+			} else if(type === Boolean && typeof val === "boolean") {
+				this._data[key] = val;
+				this.emit("change");
+				this.emit("change:" + key);
+			} else if(type === Date && val instanceof Date) {
+				this._data[key] = val;
+				this.emit("change");
+				this.emit("change:" + key);
+			} else {
+				throw new Error("Key, " + key + ", must be of type " + type);
+			}
+		}
+	});
+	if(initialValue) {
+		this[key] = initialValue;
 	}
 };
 
