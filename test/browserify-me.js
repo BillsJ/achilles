@@ -37,6 +37,8 @@ window.addEventListener("load", function() {
 	});
 
 	Xavier.age = 15;
+	Xavier.age = 15;
+	Xavier.age = 14;
 
 	var John = new Person("John", true);
 });

@@ -21,7 +21,9 @@ achilles.Object.prototype.define = function(key, type) {
 			return this._data[key];
 		},
 		set: function(val) {
-			if(type === String && typeof val === "string") {
+			if(val === this._data[key]) { // Do not set if identical
+				return;
+			} else if(type === String && typeof val === "string") {
 				this._data[key] = val;
 				this.emit("change");
 				this.emit("change:" + key);
