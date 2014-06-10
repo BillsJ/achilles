@@ -1103,16 +1103,61 @@ var events = require("events");
 var achilles = {};
 
 /**
-   Creates an EventEmitter
-   @class Represents an EventEmitter on a DOM object
+   Instantiates an achilles Object
+   @class Provides an Object-Oriented structure to extend
    @lends events.EventEmitter
  */
-achilles.EventEmitter = function(el) {
+achilles.Object = function(base) {
 	events.EventEmitter.call(this);
+	this._data = {};
+};
+
+util.inherits(achilles.Object, events.EventEmitter);
+
+achilles.Object.prototype.define = function(key, type) {
+	Object.defineProperty(this, key, {
+		get: function() {
+			return this._data[key];
+		},
+		set: function(val) {
+			if(type === String && typeof val === "string") {
+				this._data[key] = val;
+				this.emit("change");
+				this.emit("change:" + key);
+			} else if(type === String && typeof val.toString() === "string") {
+				this._data[key] = val.toString();
+				this.emit("change");
+				this.emit("change:" + key);
+			} else if(type === Number && typeof val === "number") {
+				this._data[key] = val;
+				this.emit("change");
+				this.emit("change:" + key);
+			} else if(type === Boolean && typeof val === "boolean") {
+				this._data[key] = val;
+				this.emit("change");
+				this.emit("change:" + key);
+			} else if(type === Date && val instanceof Date) {
+				this._data[key] = val;
+				this.emit("change");
+				this.emit("change:" + key);
+			} else {
+				throw new Error("Key, " + key + ", must be of type " + type);
+			}
+		}
+	});
+};
+
+/**
+   Creates an EventEmitter
+   @class Represents an EventEmitter on a DOM object
+   @lends achilles.Object
+ */
+achilles.EventEmitter = function(el) {
+	achilles.Object.call(this);
 	this.el = el;
 };
 
-util.inherits(achilles.EventEmitter, events.EventEmitter);
+util.inherits(achilles.EventEmitter, achilles.Object);
 
 achilles.EventEmitter.prototype.addListener
 	= achilles.EventEmitter.prototype.on
@@ -1161,12 +1206,12 @@ util.inherits(achilles.Controller, achilles.EventEmitter);
 
 achilles.Controller.prototype.render = function() {
 	if(this.template) {
-		this.template(this.scope, (function(err, html) {
+		this.template((function(err, html) {
 			this.el.innerHTML = html;
 			this.emit("render");
 		}).bind(this));
 	} else if(this.templateSync) {
-		this.el.innerHTML = this.templateSync(this.scope);
+		this.el.innerHTML = this.templateSync();
 		this.emit("render");
 	}
 };
@@ -1175,8 +1220,9 @@ module.exports = achilles;
 
 },{"__browserify_process":4,"events":2,"util":3}],6:[function(require,module,exports){
 var achilles = require("../index");
+var util = require("util");
 
-window.onload = function() {
+window.addEventListener("load", function() {
 	var enclosure = new achilles.EventEmitter(document.getElementById("enclosure"));
 
 	enclosure.on("click .first", function(e) {
@@ -1188,9 +1234,33 @@ window.onload = function() {
 		console.log("bye");
 		console.log(e);
 	});
-};
+});
 
+function Person(name, age) {
+	achilles.Object.call(this);
 
+	this.define("name", String);
+	this.define("age", Number);
 
-},{"../index":5}]},{},[6])
+	this.name = name;
+	this.age = age;
+}
+
+util.inherits(Person, achilles.Object);
+
+window.addEventListener("load", function() {
+	var Xavier = new Person("Xavier", 13);
+	console.log(Xavier.name);
+	console.log(Xavier.age);
+
+	Xavier.on("change:age", function() {
+		console.log("Age changed to " + this.age);
+	});
+
+	Xavier.age = 15;
+
+	var John = new Person("John", true);
+});
+
+},{"../index":5,"util":3}]},{},[6])
 ;

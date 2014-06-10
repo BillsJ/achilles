@@ -1,24 +1,25 @@
 {
-  "name": "achilles",
-  "version": "0.0.0",
-  "description": "Lightweight framework for structured web applications",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "controller",
-    "view",
-    "client",
-    "browser"
-  ],
-  "author": "Hashan Punchihewa <hashan.punchihewa@gmail.com>",
-  "license": "BSD-2-Clause",
-  "dependencies": {},
-  "devDependencies": {
-    "browserify": "~4.1.8"
-  }
+	"name": "achilles",
+	"version": "0.1.0",
+	"description": "Lightweight framework for structured web applications",
+	"repository":"https://github.com/HashanP/achilles",
+	"main": "index.js",
+	"directories": {
+		"test": "test"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"controller",
+		"view",
+		"client",
+		"browser"
+	],
+	"author": "Hashan Punchihewa <hashan.punchihewa@gmail.com>",
+	"license": "BSD-2-Clause",
+	"dependencies": {},
+	"devDependencies": {
+		"browserify": "~4.1.8"
+	}
 }
