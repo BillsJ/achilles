@@ -1,7 +1,7 @@
 achilles
 ========
 
-A lightweight framework for structured web applications.
+A lightweight framework for structured web applications. N.B: This is still a work in progress; help would greatly be appreciated, as would any ideas.
 
 ## Introduction
 ### Install
@@ -10,7 +10,7 @@ npm install achilles --save
 ```
 
 ### Why yet another framework?
-The internet is populated with so many client-side frameworks from Backbone.js to Angular.js to React.js to Ractive.js to Vue.js. Why yet another framework? achilles was born out of the need to:
+The internet is populated with so many client-side frameworks from Backbone.js to Angular.js to React.js to Ractive.js to Vue.js. Why yet another framework? achilles was born from the need to:
 - Have a lightweight framework, that could work with **all** templating languages including asyncronous templates, and d3 graphs
 - Have an API which was consistent with Node.js, for instance: `template` and `templateSync`; the of an Node's EventEmitter as the base for `achilles.Object`
 - The choice of Node's `util.inherits` method over the horrific `.extend` pattern seen in many other frameowrks
