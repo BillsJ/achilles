@@ -20,9 +20,11 @@ function Person(name, age) {
 
 	this.define("name", String);
 	this.define("age", Number);
+	this.define("children", [Person]);
 
 	this.name = name;
 	this.age = age;
+	this.children = [];
 }
 
 util.inherits(Person, achilles.Object);
@@ -36,10 +38,16 @@ window.addEventListener("load", function() {
 		console.log("Age changed to " + this.age);
 	});
 
+	Xavier.on("push:children", function(child) {
+		console.log("New child added, called " + child.name);
+	});
+
 	Xavier.age = 15;
 	Xavier.age = 15;
 	Xavier.age = 14;
 
-	var John = new Person("John", true);
+	var John = new Person("John", 18);
+	Xavier.children.push(John);
+	console.log(Xavier.children);
 });
 

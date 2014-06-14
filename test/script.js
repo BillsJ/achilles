@@ -1114,6 +1114,27 @@ achilles.Object = function(base) {
 
 util.inherits(achilles.Object, events.EventEmitter);
 
+var ensureType = function(val, type) {
+	if(type === String && typeof val === "string") {
+		return val;
+	} else if(type === String && typeof val.toString() === "string") {
+		return val.toString();
+	} else if(type === Number && typeof val === "number") {
+		return val;
+	} else if(type === Boolean && typeof val === "boolean") {
+		return val;
+	} else if(type instanceof Array && val instanceof Array) {
+		val.forEach(function(value) {
+			ensureType(value, type);
+		});
+		return val;
+	} else if(val instanceof type) {
+		return val;
+	} else {
+		throw new TypeError("Value, " + val + ", must be of type " + type);
+	}
+};
+
 achilles.Object.prototype.define = function(key, type) {
 	Object.defineProperty(this, key, {
 		get: function() {
@@ -1122,29 +1143,18 @@ achilles.Object.prototype.define = function(key, type) {
 		set: function(val) {
 			if(val === this._data[key]) { // Do not set if identical
 				return;
-			} else if(type === String && typeof val === "string") {
-				this._data[key] = val;
-				this.emit("change");
-				this.emit("change:" + key);
-			} else if(type === String && typeof val.toString() === "string") {
-				this._data[key] = val.toString();
-				this.emit("change");
-				this.emit("change:" + key);
-			} else if(type === Number && typeof val === "number") {
-				this._data[key] = val;
-				this.emit("change");
-				this.emit("change:" + key);
-			} else if(type === Boolean && typeof val === "boolean") {
-				this._data[key] = val;
-				this.emit("change");
-				this.emit("change:" + key);
-			} else if(type === Date && val instanceof Date) {
-				this._data[key] = val;
-				this.emit("change");
-				this.emit("change:" + key);
-			} else {
-				throw new Error("Key, " + key + ", must be of type " + type);
 			}
+			if(type instanceof Array) {
+				var _push = val.push;
+				val.push = (function(value) {
+					ensureType(value, type[0]);
+					val[val.length] = value;
+					this.emit("push:" + key, value);
+				}).bind(this);
+			}
+			this._data[key] = ensureType(val, type);
+			this.emit("change");
+			this.emit("change:" + key);
 		}
 	});
 };
@@ -1156,6 +1166,7 @@ achilles.Object.prototype.define = function(key, type) {
  */
 achilles.EventEmitter = function(el) {
 	achilles.Object.call(this);
+	this.define("el", Element);
 	this.el = el;
 };
 
@@ -1243,9 +1254,11 @@ function Person(name, age) {
 
 	this.define("name", String);
 	this.define("age", Number);
+	this.define("children", [Person]);
 
 	this.name = name;
 	this.age = age;
+	this.children = [];
 }
 
 util.inherits(Person, achilles.Object);
@@ -1259,11 +1272,17 @@ window.addEventListener("load", function() {
 		console.log("Age changed to " + this.age);
 	});
 
+	Xavier.on("push:children", function(child) {
+		console.log("New child added, called " + child.name);
+	});
+
 	Xavier.age = 15;
 	Xavier.age = 15;
 	Xavier.age = 14;
 
-	var John = new Person("John", true);
+	var John = new Person("John", 18);
+	Xavier.children.push(John);
+	console.log(Xavier.children);
 });
 
 

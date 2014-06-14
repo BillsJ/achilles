@@ -15,6 +15,27 @@ achilles.Object = function(base) {
 
 util.inherits(achilles.Object, events.EventEmitter);
 
+var ensureType = function(val, type) {
+	if(type === String && typeof val === "string") {
+		return val;
+	} else if(type === String && typeof val.toString() === "string") {
+		return val.toString();
+	} else if(type === Number && typeof val === "number") {
+		return val;
+	} else if(type === Boolean && typeof val === "boolean") {
+		return val;
+	} else if(type instanceof Array && val instanceof Array) {
+		val.forEach(function(value) {
+			ensureType(value, type);
+		});
+		return val;
+	} else if(val instanceof type) {
+		return val;
+	} else {
+		throw new TypeError("Value, " + val + ", must be of type " + type);
+	}
+};
+
 achilles.Object.prototype.define = function(key, type) {
 	Object.defineProperty(this, key, {
 		get: function() {
@@ -23,29 +44,17 @@ achilles.Object.prototype.define = function(key, type) {
 		set: function(val) {
 			if(val === this._data[key]) { // Do not set if identical
 				return;
-			} else if(type === String && typeof val === "string") {
-				this._data[key] = val;
-				this.emit("change");
-				this.emit("change:" + key);
-			} else if(type === String && typeof val.toString() === "string") {
-				this._data[key] = val.toString();
-				this.emit("change");
-				this.emit("change:" + key);
-			} else if(type === Number && typeof val === "number") {
-				this._data[key] = val;
-				this.emit("change");
-				this.emit("change:" + key);
-			} else if(type === Boolean && typeof val === "boolean") {
-				this._data[key] = val;
-				this.emit("change");
-				this.emit("change:" + key);
-			} else if(val instanceof type) {
-				this._data[key] = val;
-				this.emit("change");
-				this.emit("change:" + key);
-			} else {
-				throw new Error("Key, " + key + ", must be of type " + type);
 			}
+			if(type instanceof Array) {
+				val.push = (function(value) {
+					ensureType(value, type[0]);
+					val[val.length] = value;
+					this.emit("push:" + key, value);
+				}).bind(this);
+			}
+			this._data[key] = ensureType(val, type);
+			this.emit("change");
+			this.emit("change:" + key);
 		}
 	});
 };
