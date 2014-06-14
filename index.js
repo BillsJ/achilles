@@ -39,7 +39,7 @@ achilles.Object.prototype.define = function(key, type) {
 				this._data[key] = val;
 				this.emit("change");
 				this.emit("change:" + key);
-			} else if(type === Date && val instanceof Date) {
+			} else if(val instanceof type) {
 				this._data[key] = val;
 				this.emit("change");
 				this.emit("change:" + key);
@@ -57,6 +57,7 @@ achilles.Object.prototype.define = function(key, type) {
  */
 achilles.EventEmitter = function(el) {
 	achilles.Object.call(this);
+	this.define("el", Element);
 	this.el = el;
 };
 
