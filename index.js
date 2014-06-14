@@ -32,7 +32,7 @@ var ensureType = function(val, type) {
 	} else if(val instanceof type) {
 		return val;
 	} else {
-		throw new TypeError("Value, " + val + ", must be of type " + type);
+		throw new TypeError("Value, " + val + ", must be of type " + type.name || type);
 	}
 };
 
