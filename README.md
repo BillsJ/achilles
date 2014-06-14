@@ -31,7 +31,8 @@ function Person(name) {
     this.define("height", Number);
     this.define("dataOfBirth", Date);
     this.define("alive", Boolean);
-    
+	this.define("children", [Person]);
+
     this.name = name;
 }
 
