@@ -1,11 +1,7 @@
 achilles
 ========
 
-Lightweight framework for structured web applications.
-
-Made to be used with browserify.
-
-Doesn't need to be used with jQuery, etc.
+A lightweight framework for structured web applications.
 
 ### achilles.EventEmitter
 Inherits from Node's EventEmitter, and therefore all its methods. The constructor takes one argument, an element. 
