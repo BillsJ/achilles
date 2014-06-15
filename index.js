@@ -66,6 +66,7 @@ achilles.Object.prototype.define = function(key, type) {
  */
 achilles.EventEmitter = function(el) {
 	achilles.Object.call(this);
+	this.on("change:el", this.applyAllListeners.bind(this));
 	this.define("el", Element);
 	if(this.el instanceof Element) {
 		this.el = el;
@@ -84,11 +85,7 @@ achilles.EventEmitter.prototype.addListener
 	= achilles.EventEmitter.prototype.on
 	= function(type, listener) {
 		events.EventEmitter.prototype.addListener.call(this, type, listener);
-		if(document.readyState === "loading") {
-			window.addEventListener("load", (function() {
-				this.applyListener(type, listener);
-			}).bind(this));
-		} else if(this.el) {
+		if(this.el) {
 			this.applyListener(type, listener);
 		}
 };
@@ -105,6 +102,22 @@ achilles.EventEmitter.prototype.applyListener = function(type, listener) {
 				this.emit(type, e);
 			}
 		}).bind(this), false);
+	}
+};
+
+achilles.EventEmitter.prototype.applyAllListeners = function(event) {
+	if(event) {
+		if(typeof this._events[event] === "function") {
+			this.applyListener(event, this._events[event]);
+		} else if(this._events[event]) {
+			this._events[event].forEach(function(listener) {
+				this.applyListener(event, listener);
+			});
+		}
+	} else {
+		for(var event in this._events) {
+			this.applyAllListeners(event);
+		}
 	}
 };
 
@@ -127,12 +140,15 @@ achilles.Controller = function(el) {
 		el = document.createElement("div");
 	}
 	achilles.EventEmitter.call(this, el);
-	if(this.className) {
-		this.el.classList.add(this.className);
-	}
-	process.nextTick((function() {
+	this.on("change:el", (function() {
+		if(this.className) {
+			this.el.classList.add(this.className);
+		}
 		this.render();
 	}).bind(this));
+	if(document.readyState !== "loading") {
+		this.render();
+	}
 };
 
 util.inherits(achilles.Controller, achilles.EventEmitter);
