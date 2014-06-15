@@ -52,7 +52,7 @@ Inheriting from achilles.Object, and therefore events.EventEmitter, achilles.Eve
 ```js
 var achilles = require("achilles");
 
-var Main = new achilles.EventEmitter("main");
+var Main = new achilles.EventEmitter("main"); // Registers events on the <main> element
 
 Main.on("click button.submit", function(e) {
     // A button with the class `submit`, inside `<main>`, was clicked
