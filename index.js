@@ -110,9 +110,9 @@ achilles.EventEmitter.prototype.applyAllListeners = function(event) {
 		if(typeof this._events[event] === "function") {
 			this.applyListener(event, this._events[event]);
 		} else if(this._events[event]) {
-			this._events[event].forEach(function(listener) {
+			this._events[event].forEach((function(listener) {
 				this.applyListener(event, listener);
-			});
+			}).bind(this));
 		}
 	} else {
 		for(var event in this._events) {
