@@ -17,6 +17,7 @@ The internet is populated with so many client-side frameworks from Backbone.js t
 - The necessity for a strong-typed object system, that was based `util.inherits`
 - The seperation of presentation and content (i.e. the seperation of HTML, CSS, JS), which is a principle Angular.js et al. so keenly violate
 - Consistent naming structure: classes should be capitalised; everything else including nampespaces should not. An example of this is Node's `events` module.
+- No need for boilerplate `window.addEventListener("load"...` or `$(document).ready()` code
 
 ## API
 
