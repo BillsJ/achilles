@@ -67,7 +67,15 @@ achilles.Object.prototype.define = function(key, type) {
 achilles.EventEmitter = function(el) {
 	achilles.Object.call(this);
 	this.define("el", Element);
-	this.el = el;
+	if(this.el instanceof Element) {
+		this.el = el;
+	} else if(document.readyState === "interactive") {
+		this.el = document.querySelector(el);
+	} else {
+		window.addEventListener("load", (function() {
+			this.el = document.querySelector(el);
+		}).bind(this));
+	}
 };
 
 util.inherits(achilles.EventEmitter, achilles.Object);
@@ -76,25 +84,37 @@ achilles.EventEmitter.prototype.addListener
 	= achilles.EventEmitter.prototype.on
 	= function(type, listener) {
 		events.EventEmitter.prototype.addListener.call(this, type, listener);
-		var parts = type.split(" ");
-		var eventType = parts.splice(0, 1);
-		var eventTarget = parts.join(" ");
-		if(!eventTarget) {
-			this.el.addEventListener(eventType, listener, false);
-		} else if(events.EventEmitter.listenerCount(this, type)) {
-			this.el.addEventListener(eventType, (function(e) {
-				if(e.target.matches(eventTarget)) {
-					this.emit(type, e);
-				}
-			}).bind(this), false);
+		if(document.readyState === "loading") {
+			window.addEventListener("load", (function() {
+				this.applyListener(type, listener);
+			}).bind(this));
+		} else if(this.el) {
+			this.applyListener(type, listener);
 		}
+};
+
+achilles.EventEmitter.prototype.applyListener = function(type, listener) {
+	var parts = type.split(" ");
+	var eventType = parts.splice(0, 1);
+	var eventTarget = parts.join(" ");
+	if(!eventTarget) {
+		this.el.addEventListener(eventType, listener, false);
+	} else if(events.EventEmitter.listenerCount(this, type)) {
+		this.el.addEventListener(eventType, (function(e) {
+			if(e.target.matches(eventTarget)) {
+				this.emit(type, e);
+			}
+		}).bind(this), false);
+	}
 };
 
 achilles.EventEmitter.prototype.removeListener = function(type, listener) {
 	events.EventEmitter.prototype.removeListener.call(this, type, listener);
-	var parts = type.split(" ");
-	var eventType = parts.splice(0, 1);
-	this.el.removeEventListener(eventType, listener);
+	if(this.el) {
+		var parts = type.split(" ");
+		var eventType = parts.splice(0, 1);
+		this.el.removeEventListener(eventType, listener);
+	}
 };
 
 /**
@@ -127,6 +147,36 @@ achilles.Controller.prototype.render = function() {
 		this.el.innerHTML = this.templateSync();
 		this.emit("render");
 	}
+};
+
+achilles.Controller.prototype.append = function(el) {
+	el.appendChild(this.el);
+};
+
+achilles.Controller.prototype.delegate = function(selector, thing) {
+	thing.el = this.el.querySelector(selector);
+	this.on("render", (function() {
+		thing.el = this.el.querySelector(selector);
+	}).bind(this));
+};
+
+achilles.Collection = function(model, key, controller) {
+	this.controller = controller;
+	this.subcontrollers = [];
+	this.model[key].forEach(this.addController);
+	model.on("push:" + key, this.addController.bind(this));
+};
+
+util.inherits(achilles.Collection, achilles.Controller);
+
+achilles.Collection.prototype.addController = function(item) {
+	this.subcontrollers.push(new this.controller({model: item}));
+};
+
+achilles.Collection.prototype.render = function() {
+	this.subcontrollers.forEach((function(controller) {
+		controller.append(this.el);
+	}).bind(this));
 };
 
 module.exports = achilles;
