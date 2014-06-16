@@ -92,14 +92,13 @@ George.age = 13;
 ```
 
 ### achilles.EventEmitter
-Inheriting from achilles.Object, and therefore events.EventEmitter, achilles.EventEmitter provides an interface to attach events to a given element, and its children via event delegation.
+#### Example
+*achilles.EventEmitter* inherits from *achilles.Object*, and provides a beautifully-designed jQuery-less interface to listen to DOM events. Not only that, *achilles.EventEmitter* is a sturdy foundation on to of which other *achilles* classes are created.
 
 ```js
-var achilles = require("achilles");
+var MyApp = new achilles.EventEmitter("main"); // Registers events on the <main> element
 
-var Main = new achilles.EventEmitter("main"); // Registers events on the <main> element
-
-Main.on("click button.submit", function(e) {
+MyApp.on("click button.submit", function(e) {
     // A button with the class `submit`, inside `<main>`, was clicked
 });
 
@@ -108,3 +107,36 @@ Main.on("click", function(e) {
 });
 ```
 
+#### No need for boilerplate code
+Users of jQuery et al. might have realised that in the previous example there was no boilerplate code. In jQuery et al. you need to wait for the DOM to load:
+```js
+$(document).ready(function() {
+    // Code here
+});
+```
+Because of *achilles*'s event-driven architecture, that is not the case here.
+
+#### Instantiating
+To create an *achilles.EventEmitter*, pass a CSS selector into its constructor, e.g:
+```js
+var MyApp = new achilles.EventEmitter("#container");
+```
+Here *achilles.EventEmitter* is assigned to the event with the id *container*.
+
+#### Events
+To declare an events, on the `#container` element, use the *on* method:
+```js
+MyApp.on("click", function(e) {
+
+});
+```
+The first parameter of *on* method is an event name, and the second is a function, that itself takes an Event argument. The Event argumenet isn't strictly necessary, but it provides information about the event.
+
+#### Event delegation
+You will rarely only need to put events on the root element, in this case `#container`. To declare event handlers for children of the root element, use event delegation:
+```js
+MyApp.on("click button.reload", function(e) {
+
+});
+```
+Here *MyApp* listens for a *click* event on any buttons, with the class `reload`, inside the `#container` element.
