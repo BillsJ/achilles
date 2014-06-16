@@ -36,7 +36,7 @@ function Person(name) {
     this.define("height", Number);
     this.define("dataOfBirth", Date);
     this.define("alive", Boolean);
-	this.define("children", [Person]);
+    this.define("children", [Person]);
 
     this.name = name;
 }
@@ -48,6 +48,23 @@ Person.prototype.reset = function() {
     this.alive = true;
 };
 
+```
+
+
+#### Instantiating classes
+To instantiate a class, do:
+```js
+var George = new Person("George");
+```
+
+#### Getting & setting properties
+To get a property, do:
+```js
+console.log(George.name);
+```
+To set a  property, do:
+```js
+George.age = 13;
 ```
 
 ### achilles.EventEmitter
