@@ -3,7 +3,6 @@ achilles
 
 A lightweight framework for structured web applications. N.B: This is still a work in progress; help would greatly be appreciated, as would any ideas.
 
-## Introduction
 ### Install
 ```bash
 npm install achilles --save
