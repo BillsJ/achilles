@@ -8,6 +8,12 @@ A lightweight framework for structured web applications. N.B: This is still a wo
 npm install achilles --save
 ```
 
+### Usage: Browserify
+achilles is designed to work seamlessly with achilles, simply do:
+```js
+var achilles = require("achilles");
+```
+
 ### Why yet another framework?
 The internet is populated with so many client-side frameworks from Backbone.js to Angular.js to React.js to Ractive.js to Vue.js. Why yet another framework? achilles was born from the need to:
 - Have a lightweight framework, that could work with **all** templating languages including asyncronous templates, and d3 graphs
@@ -23,7 +29,6 @@ The internet is populated with so many client-side frameworks from Backbone.js t
 ### achilles.Object
 Inheriting from events.EventEmitter, achilles.Object provides an object-orientated structure for classes:
 ```js
-var achilles = require("achilles");
 var util = require("util");
 
 function Person(name) {
