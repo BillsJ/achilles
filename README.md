@@ -64,7 +64,7 @@ util.inherits(MyClass, achilles.Object);
 
 The last part makes *MyClass* inherit all of *achilles.Object*'s methods, which are used in the following sections to declare properties.
 
-#### Declaring properties
+#### Defining properties
 Inside the construcutor use the *define* method, which is inherited from *achilles.Object* to declare properties:
 ```js
 function Person(name) {
@@ -73,7 +73,15 @@ function Person(name) {
 }
 ```
 
-The method *define* accepts two parameters: first a property name, and second a type. An TypeError will be raised if a property is set to a value that does not match the type.
+The method *define* accepts two parameters: first a property name, and second a type. 
+
+##### Defining properties as arrays
+To define properties as arrays of a type, put the type in an array, e.g.:
+```js
+this.define("favouriteColours", [String]); // An array of Strings
+this.define("favouriteNumbers", [Number]); // An array of Numbers
+this.define("children", [Person]); // An array of People
+```
 
 #### Instantiating classes
 To instantiate a class, do:
@@ -90,6 +98,8 @@ To set a  property, do:
 ```js
 George.age = 13;
 ```
+
+A TypeError will be raised if a property is set to a value that does not match the type.
 
 ### achilles.EventEmitter
 #### Example
