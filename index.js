@@ -19,12 +19,17 @@ var ensureType = function(val, type) {
 	if(type === String && typeof val === "string") {
 		return val;
 	} else if(type === String && typeof val.toString() === "string") {
+		// Object to String Casting
 		return val.toString();
 	} else if(type === Number && typeof val === "number") {
 		return val;
+	} else if(type === Number && typeof val === "string" && !isNaN(val)) {
+		// String to Number casting
+		return parseInt(val, 10);
 	} else if(type === Boolean && typeof val === "boolean") {
 		return val;
 	} else if(type instanceof Array && val instanceof Array) {
+		// Array handling
 		val.forEach(function(value) {
 			ensureType(value, type);
 		});
