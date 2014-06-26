@@ -10,7 +10,8 @@ var achilles = {};
  */
 achilles.Object = function(base) {
 	events.EventEmitter.call(this);
-	this._data = {};
+	this._data = {}; // Stores data
+	this._type = {}; // Stores data types
 };
 
 util.inherits(achilles.Object, events.EventEmitter);
@@ -42,26 +43,32 @@ var ensureType = function(val, type) {
 };
 
 achilles.Object.prototype.define = function(key, type) {
-	Object.defineProperty(this, key, {
-		get: function() {
-			return this._data[key];
-		},
-		set: function(val) {
-			if(val === this._data[key]) { // Do not set if identical
-				return;
+	if(this._type[key]) { // If defined previously
+		delete this._data[key]; // Delete old invalid data
+		this._type[key] = type; // Store type
+	} else {
+		this._type[key] = type; // Otherwise just store type anyway
+		Object.defineProperty(this, key, {
+			get: function() {
+				return this._data[key];
+			},
+			set: function(val) {
+				if(val === this._data[key]) { // Do not set if identical
+					return;
+				}
+				if(this._type[key] instanceof Array) {
+					val.push = (function(value) {
+						ensureType(value, this._type[key][0]);
+						val[val.length] = value;
+						this.emit("push:" + key, value);
+					}).bind(this);
+				}
+				this._data[key] = ensureType(val, this._type[key]);
+				this.emit("change");
+				this.emit("change:" + key);
 			}
-			if(type instanceof Array) {
-				val.push = (function(value) {
-					ensureType(value, type[0]);
-					val[val.length] = value;
-					this.emit("push:" + key, value);
-				}).bind(this);
-			}
-			this._data[key] = ensureType(val, type);
-			this.emit("change");
-			this.emit("change:" + key);
-		}
-	});
+		});
+	}
 };
 
 /**
@@ -174,24 +181,36 @@ achilles.Controller.prototype.append = function(el) {
 	el.appendChild(this.el);
 };
 
-achilles.Controller.prototype.delegate = function(selector, thing) {
+achilles.Controller.prototype.delegate = function(selector, key, thing) {
 	thing.el = this.el.querySelector(selector);
 	this.on("render", (function() {
 		thing.el = this.el.querySelector(selector);
 	}).bind(this));
+	this.on("change:" + key, function(e) {
+		thing.emit.apply(thing, ["change"].concat(Array.prototype.slice.call(arguments)));
+	});
+	this.on("push:" + key, function(e) {
+		thing.emit.apply(thing, ["push"].concat(Array.prototype.slice.call(arguments)));
+	});
 };
 
-achilles.Collection = function(model, key, controller) {
+achilles.Collection = function(model, controller) {
 	this.controller = controller;
 	this.subcontrollers = [];
-	this.model[key].forEach(this.addController);
-	model.on("push:" + key, this.addController.bind(this));
+	this.model = model;
+	this.model.forEach(this.addController);
+	this.on("push", this.addController.bind(this));
 };
 
 util.inherits(achilles.Collection, achilles.Controller);
 
 achilles.Collection.prototype.addController = function(item) {
-	this.subcontrollers.push(new this.controller({model: item}));
+	var itemNew = new this.controller({model: item});
+	itemNew.on("destroy", (function() {
+		this.subcontrollers.splice(this.subcontrollers.indexOf(itemNew), 1);
+	}).bind(this));
+	this.subcontrollers.push(itemNew);
+	itemNew.append(this.el);
 };
 
 achilles.Collection.prototype.render = function() {

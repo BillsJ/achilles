@@ -1,19 +1,18 @@
 var achilles = require("../index");
 var util = require("util");
 
-window.addEventListener("load", function() {
-	var enclosure = new achilles.EventEmitter(document.getElementById("enclosure"));
+var enclosure = new achilles.EventEmitter("#enclosure");
 
-	enclosure.on("click .first", function(e) {
-		console.log("hi");
-		console.log(e);
-	});
-
-	enclosure.on("click .second", function(e) {
-		console.log("bye");
-		console.log(e);
-	});
+enclosure.on("click .first", function(e) {
+	console.log("hi");
+	console.log(e);
 });
+
+enclosure.on("click .second", function(e) {
+	console.log("bye");
+	console.log(e);
+});
+
 
 function Person(name, age) {
 	achilles.Object.call(this);
