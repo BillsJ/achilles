@@ -3,10 +3,15 @@ achilles
 
 A lightweight framework for structured web applications. N.B: This is still a work in progress; help would greatly be appreciated, as would any ideas.
 
-## Introduction
 ### Install
 ```bash
 npm install achilles --save
+```
+
+### Usage: Browserify
+achilles is designed to work seamlessly with achilles, simply do:
+```js
+var achilles = require("achilles");
 ```
 
 ### Why yet another framework?
@@ -17,13 +22,15 @@ The internet is populated with so many client-side frameworks from Backbone.js t
 - The necessity for a strong-typed object system, that was based `util.inherits`
 - The seperation of presentation and content (i.e. the seperation of HTML, CSS, JS), which is a principle Angular.js et al. so keenly violate
 - Consistent naming structure: classes should be capitalised; everything else including nampespaces should not. An example of this is Node's `events` module.
+- No need for boilerplate `window.addEventListener("load"...` or `$(document).ready()` code, thanks to an event-driven architecture
 
 ## API
 
 ### achilles.Object
-Inheriting from events.EventEmitter, achilles.Object provides an object-orientated structure for classes:
+
+#### Example
+Inheriting from *events.EventEmitter*, *achilles.Object* provides an object-orientated structure for classes:
 ```js
-var achilles = require("achilles");
 var util = require("util");
 
 function Person(name) {
@@ -31,7 +38,7 @@ function Person(name) {
     this.define("height", Number);
     this.define("dataOfBirth", Date);
     this.define("alive", Boolean);
-	this.define("children", [Person]);
+    this.define("children", [Person]);
 
     this.name = name;
 }
@@ -45,15 +52,63 @@ Person.prototype.reset = function() {
 
 ```
 
+#### Creating classes
+To create a class, use the standard practice of declaring classes as functions:
+```js
+function MyClass() {
+    // Constructor
+}
+
+util.inherits(MyClass, achilles.Object); 
+```
+
+The last part makes *MyClass* inherit all of *achilles.Object*'s methods, which are used in the following sections to declare properties.
+
+#### Defining properties
+Inside the construcutor use the *define* method, which is inherited from *achilles.Object* to declare properties:
+```js
+function Person(name) {
+    this.define("name", String);
+    this.name = name;
+}
+```
+
+The method *define* accepts two parameters: first a property name, and second a type. 
+
+##### Defining properties as arrays
+To define properties as arrays of a type, put the type in an array, e.g.:
+```js
+this.define("favouriteColours", [String]); // An array of Strings
+this.define("favouriteNumbers", [Number]); // An array of Numbers
+this.define("children", [Person]); // An array of People
+```
+
+#### Instantiating classes
+To instantiate a class, do:
+```js
+var George = new Person("George");
+```
+
+#### Getting & setting properties
+To get a property, do:
+```js
+console.log(George.name);
+```
+To set a  property, do:
+```js
+George.age = 13;
+```
+
+A TypeError will be raised if a property is set to a value that does not match the type.
+
 ### achilles.EventEmitter
-Inheriting from achilles.Object, and therefore events.EventEmitter, achilles.EventEmitter provides an interface to attach events to a given element, and its children via event delegation.
+#### Example
+*achilles.EventEmitter* inherits from *achilles.Object*, and provides a beautifully-designed jQuery-less interface to listen to DOM events. Not only that, *achilles.EventEmitter* is a sturdy foundation on to of which other *achilles* classes are created.
 
 ```js
-var achilles = require("achilles");
+var MyApp = new achilles.EventEmitter("main"); // Registers events on the <main> element
 
-var Main = new achilles.EventEmitter(document.querySelector("main"));
-
-Main.on("click button.submit", function(e) {
+MyApp.on("click button.submit", function(e) {
     // A button with the class `submit`, inside `<main>`, was clicked
 });
 
@@ -62,3 +117,36 @@ Main.on("click", function(e) {
 });
 ```
 
+#### No need for boilerplate code
+Users of jQuery et al. might have realised that in the previous example there was no boilerplate code. In jQuery et al. you need to wait for the DOM to load:
+```js
+$(document).ready(function() {
+    // Code here
+});
+```
+Because of *achilles*'s event-driven architecture, that is not the case here.
+
+#### Instantiating
+To create an *achilles.EventEmitter*, pass a CSS selector into its constructor, e.g:
+```js
+var MyApp = new achilles.EventEmitter("#container");
+```
+Here *achilles.EventEmitter* is assigned to the event with the id *container*.
+
+#### Events
+To declare an events, on the `#container` element, use the *on* method:
+```js
+MyApp.on("click", function(e) {
+
+});
+```
+The first parameter of *on* method is an event name, and the second is a function, that itself takes an Event argument. The Event argumenet isn't strictly necessary, but it provides information about the event.
+
+#### Event delegation
+You will rarely only need to put events on the root element, in this case `#container`. To declare event handlers for children of the root element, use event delegation:
+```js
+MyApp.on("click button.reload", function(e) {
+
+});
+```
+Here *MyApp* listens for a *click* event on any buttons, with the class `reload`, inside the `#container` element.
