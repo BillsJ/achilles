@@ -181,12 +181,29 @@ achilles.Controller.prototype.append = function(el) {
 	el.appendChild(this.el);
 };
 
+achilles.Controller.prototype.bind = function(selector, key) {
+	this.on("change " + selector, (function(e) {
+		if(this.model._type[key] instanceof Array) {
+			this.model[key] = Array.prototype.slice.call(this.el.querySelectorAll(selector)).map(function(el) {
+				return el.value;
+			});
+		} else {
+			this.model[key] = e.target.value;
+		}
+	}).bind(this));
+};
+
 achilles.Controller.prototype.delegate = function(selector, key, thing) {
 	thing.el = this.el.querySelector(selector);
+	if(thing.hasOwnProperty("model")) {
+		thing.model = this.model[key];
+	} else {
+		thing.value = this.model[key];
+	}
 	this.on("render", (function() {
 		thing.el = this.el.querySelector(selector);
 	}).bind(this));
-	this.on("change:" + key, function(e) {
+	this.model.on("change:" + key, function(e) {
 		thing.emit.apply(thing, ["change"].concat(Array.prototype.slice.call(arguments)));
 	});
 	this.on("push:" + key, function(e) {
@@ -205,9 +222,11 @@ achilles.Collection = function(model, controller) {
 util.inherits(achilles.Collection, achilles.Controller);
 
 achilles.Collection.prototype.addController = function(item) {
-	var itemNew = new this.controller({model: item});
+	var itemNew = new this.controller();
+	itemNew.model = item;
 	itemNew.on("destroy", (function() {
 		this.subcontrollers.splice(this.subcontrollers.indexOf(itemNew), 1);
+		this.model.splice(this.model.indexOf(itemNew.model), 1);
 	}).bind(this));
 	this.subcontrollers.push(itemNew);
 	itemNew.append(this.el);
