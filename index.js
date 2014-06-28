@@ -217,12 +217,13 @@ achilles.Controller.prototype.delegate = function(selector, key, thing) {
 	});
 };
 
-achilles.Collection = function(model, controller) {
+achilles.Collection = function(controller) {
 	this.controller = controller;
 	this.subcontrollers = [];
-	this.model = model;
-	this.model.forEach(this.addController);
 	this.on("push", this.addController.bind(this));
+	this.on("change", (function() {
+		this.model.forEach(this.addController);
+	}).bind(this));
 };
 
 util.inherits(achilles.Collection, achilles.Controller);
