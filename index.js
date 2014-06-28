@@ -53,19 +53,21 @@ achilles.Object.prototype.define = function(key, type) {
 				return this._data[key];
 			},
 			set: function(val) {
-				if(val === this._data[key]) { // Do not set if identical
-					return;
+				if(val) { // Checks if val exists
+					if(val === this._data[key]) { // Do not set if identical
+						return;
+					}
+					if(this._type[key] instanceof Array) {
+						val.push = (function(value) {
+							ensureType(value, this._type[key][0]);
+							val[val.length] = value;
+							this.emit("push:" + key, value);
+						}).bind(this);
+					}
+					this._data[key] = ensureType(val, this._type[key]);
+					this.emit("change");
+					this.emit("change:" + key);
 				}
-				if(this._type[key] instanceof Array) {
-					val.push = (function(value) {
-						ensureType(value, this._type[key][0]);
-						val[val.length] = value;
-						this.emit("push:" + key, value);
-					}).bind(this);
-				}
-				this._data[key] = ensureType(val, this._type[key]);
-				this.emit("change");
-				this.emit("change:" + key);
 			}
 		});
 	}
