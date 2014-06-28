@@ -167,12 +167,12 @@ util.inherits(achilles.Controller, achilles.EventEmitter);
 
 achilles.Controller.prototype.render = function() {
 	if(this.template) {
-		this.template((function(err, html) {
+		this.template(this, (function(err, html) {
 			this.el.innerHTML = html;
 			this.emit("render");
 		}).bind(this));
 	} else if(this.templateSync) {
-		this.el.innerHTML = this.templateSync();
+		this.el.innerHTML = this.templateSync(this);
 		this.emit("render");
 	}
 };
@@ -185,10 +185,10 @@ achilles.Controller.prototype.bind = function(selector, key) {
 	this.on("change " + selector, (function(e) {
 		if(this.model._type[key] instanceof Array) {
 			this.model[key] = Array.prototype.slice.call(this.el.querySelectorAll(selector)).map(function(el) {
-				return el.value;
+				return el.value || el.innerHTML;
 			});
 		} else {
-			this.model[key] = e.target.value;
+			this.model[key] = e.target.value || e.target.innerHTML;
 		}
 	}).bind(this));
 };
