@@ -194,15 +194,20 @@ achilles.Controller.prototype.bind = function(selector, key) {
 };
 
 achilles.Controller.prototype.delegate = function(selector, key, thing) {
-	thing.el = this.el.querySelector(selector);
 	if(thing.hasOwnProperty("model")) {
 		thing.model = this.model[key];
 	} else {
 		thing.value = this.model[key];
 	}
+
+	this.on("change:el", (function(el) {
+		thing.el = this.el.querySelector(selector);
+	}).bind(this));
+
 	this.on("render", (function() {
 		thing.el = this.el.querySelector(selector);
 	}).bind(this));
+
 	this.model.on("change:" + key, function(e) {
 		thing.emit.apply(thing, ["change"].concat(Array.prototype.slice.call(arguments)));
 	});
