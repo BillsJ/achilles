@@ -80,14 +80,16 @@ achilles.EventEmitter = function(el) {
 	achilles.Object.call(this);
 	this.on("change:el", this.applyAllListeners.bind(this));
 	this.define("el", Element);
-	if(this.el instanceof Element) {
-		this.el = el;
-	} else if(document.readyState === "interactive") {
-		this.el = document.querySelector(el);
-	} else {
-		window.addEventListener("load", (function() {
+	if(el) {
+		if(el instanceof Element) {
+			this.el = el;
+		} else if(document.readyState === "interactive") {
 			this.el = document.querySelector(el);
-		}).bind(this));
+		} else {
+			window.addEventListener("load", (function() {
+				this.el = document.querySelector(el);
+			}).bind(this));
+		}
 	}
 };
 
@@ -148,9 +150,6 @@ achilles.EventEmitter.prototype.removeListener = function(type, listener) {
 	@lends achilles.EventEmitter
  */
 achilles.Controller = function(el) {
-	if(!el) {
-		el = document.createElement("div");
-	}
 	achilles.EventEmitter.call(this, el);
 	this.on("change:el", (function() {
 		if(this.className) {
