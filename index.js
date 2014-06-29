@@ -159,7 +159,7 @@ achilles.Controller = function(el) {
 		}
 		this.render();
 	}).bind(this));
-	if(document.readyState !== "loading") {
+	if(document.readyState !== "loading" && this.el) {
 		this.render();
 	}
 };
