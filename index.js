@@ -209,12 +209,19 @@ achilles.Controller.prototype.delegate = function(selector, key, thing) {
 		thing.el = this.el.querySelector(selector);
 	}).bind(this));
 
-	this.model.on("change:" + key, function(e) {
-		thing.emit.apply(thing, ["change"].concat(Array.prototype.slice.call(arguments)));
-	});
-	this.model.on("push:" + key, function(e) {
-		thing.emit.apply(thing, ["push"].concat(Array.prototype.slice.call(arguments)));
-	});
+	var delegateEvents = (function() {
+		this.model.on("change:" + key, function(e) {
+			thing.emit.apply(thing, ["change"].concat(Array.prototype.slice.call(arguments)));
+		});
+		this.model.on("push:" + key, function(e) {
+			thing.emit.apply(thing, ["push"].concat(Array.prototype.slice.call(arguments)));
+		});
+	}).bind(this);
+
+	if(this.model) {
+		delegateEvents();
+	}
+	this.on("change:model", delegateEvents);
 };
 
 achilles.Collection = function(controller) {
