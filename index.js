@@ -212,7 +212,7 @@ achilles.Controller.prototype.delegate = function(selector, key, thing) {
 	this.model.on("change:" + key, function(e) {
 		thing.emit.apply(thing, ["change"].concat(Array.prototype.slice.call(arguments)));
 	});
-	this.on("push:" + key, function(e) {
+	this.model.on("push:" + key, function(e) {
 		thing.emit.apply(thing, ["push"].concat(Array.prototype.slice.call(arguments)));
 	});
 };
