@@ -61,6 +61,9 @@ achilles.Object.prototype.define = function(key, type) {
 						val.push = (function(value) {
 							ensureType(value, this._type[key][0]);
 							val[val.length] = value;
+							if(value instanceof achilles.Object) {
+								value.container = this;
+							}
 							this.emit("push:" + key, value);
 						}).bind(this);
 					}
@@ -71,6 +74,10 @@ achilles.Object.prototype.define = function(key, type) {
 			}
 		});
 	}
+};
+
+achilles.Object.prototype.remove = function() {
+	this.container.splice(this.container.indexOf(this), 1);
 };
 
 /**
