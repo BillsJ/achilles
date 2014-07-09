@@ -1,12 +1,17 @@
+/**
+ * @author Hashan Punchihewa
+ */
+
 var util = require("util");
-var events = require("events");
+//var events = require("events");
+var EventEmitter = require("regexemitter"); // Use regexes for events
 
 var achilles = {};
 
 /**
-   Instantiates an achilles Object
-   @class Provides an Object-Oriented structure to extend
-   @lends events.EventEmitter
+ * Instantiates an achilles Object
+ * @class Provides an Object-Oriented structure to extend
+ * @lends events.EventEmitter
  */
 achilles.Object = function(base) {
 	events.EventEmitter.call(this);
@@ -14,7 +19,7 @@ achilles.Object = function(base) {
 	this._type = {}; // Stores data types
 };
 
-util.inherits(achilles.Object, events.EventEmitter);
+util.inherits(achilles.Object, EventEmitter);
 
 var ensureType = function(val, type) {
 	if(type === String && typeof val === "string") {
@@ -39,6 +44,14 @@ var ensureType = function(val, type) {
 		return val;
 	} else {
 		throw new TypeError("Value, " + val + ", must be of type " + type.name || type);
+	}
+};
+
+var ensureArray = function(arr) {
+	if(!(arr instanceof Array)) {
+		return [arr];
+	} else {
+		return arr;
 	}
 };
 
@@ -81,9 +94,9 @@ achilles.Object.prototype.remove = function() {
 };
 
 /**
-   Creates an EventEmitter
-   @class Represents an EventEmitter on a DOM object
-   @lends achilles.Object
+ * Creates an EventEmitter
+ * @class Represents an EventEmitter on a DOM object
+ * @lends achilles.Object
  */
 achilles.EventEmitter = function(el) {
 	achilles.Object.call(this);
@@ -154,9 +167,9 @@ achilles.EventEmitter.prototype.removeListener = function(type, listener) {
 };
 
 /**
-    Creates a new Controller
-    @class Represents a dynamically-updating template-based element with a scope
-	@lends achilles.EventEmitter
+  * Creates a new Controller
+  * @class Represents a dynamically-updating template-based element with a scope
+  * @lends achilles.EventEmitter
  */
 achilles.Controller = function(el) {
 	achilles.EventEmitter.call(this, el);
@@ -258,5 +271,76 @@ achilles.Collection.prototype.render = function() {
 		controller.append(this.el);
 	}).bind(this));
 };
+
+var http = require("http");
+var pathToRegex = require("path-to-regexp");
+
+achilles.Router = function() {
+	this._events = [];
+	this.route = this.route.bind(this);
+};
+
+achilles.Router.prototype.on = function(listener) {
+	this._events.push(listener);
+};
+
+achilles.Router.prototype.use = function(url, listener) {
+	var keys = [];
+	if(typeof url === "function") {
+		listener = url;
+		var regex = new RegExp(".*", "g");
+	} else {
+		var regex = pathToRegex(url, keys);
+	}
+
+	if(listener instanceof achilles.Router) {
+		listener = listener.route;
+	} 
+
+	this.on(function(req, res, next) {
+		if(regex.test(req.url)) {
+			var values = regex.exec(req.url);
+			var obj = {};
+			keys.forEach(function(key, i) {
+				obj[key.name] = values[i];
+			});
+			req.params = obj;
+			listener(req, res, next);
+		} else {
+			next();
+		}
+	});
+};
+
+achilles.Router.prototype.route = function(req, res) {
+	var i = 0;
+	req.originalUrl = req.url;
+	var next = (function(err) {
+		if(err) {
+			console.log(err);
+			throw err;
+		} else if(this._events.length != i) {
+			i++;
+			this._events[i].apply(this, [req, res, next]);
+		} else {
+			res.writeHead(404);
+			res.end();
+		}
+	}).bind(this);
+
+	next();
+};
+
+["GET", "POST", "PUT", "DELETE", "PATCH"].forEach(function(method) {
+	achilles.Router.prototype[method === "DELETE" ? "del" : method.toLowerCase()] = function(url, fn) {
+		this.use(url, function(req, res, next) {
+			if(req.method === method) {
+				fn.apply(this, Array.prototype.slice.call(arguments));
+			} else {
+				next();
+			}
+		});
+	};
+});
 
 module.exports = achilles;
