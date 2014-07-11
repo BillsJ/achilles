@@ -1,6 +1,6 @@
 {
   "name": "achilles",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Lightweight framework for structured web applications",
   "repository": "https://github.com/HashanP/achilles",
   "main": "index.js",
@@ -19,7 +19,6 @@
   "author": "Hashan Punchihewa <hashan.punchihewa@gmail.com>",
   "license": "BSD-2-Clause",
   "dependencies": {
-    "regexemitter": "~0.2.3",
     "path-to-regexp": "~0.2.2",
     "request": "~2.37.0"
   },
