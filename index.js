@@ -3,8 +3,7 @@
  */
 
 var util = require("util");
-//var events = require("events");
-var EventEmitter = require("regexemitter"); // Use regexes for events
+var events = require("events");
 
 var achilles = {};
 
@@ -19,7 +18,7 @@ achilles.Object = function(base) {
 	this._type = {}; // Stores data types
 };
 
-util.inherits(achilles.Object, EventEmitter);
+util.inherits(achilles.Object, events.EventEmitter);
 
 var ensureType = function(val, type) {
 	if(type === String && typeof val === "string") {
@@ -295,7 +294,7 @@ achilles.Router.prototype.use = function(url, listener) {
 
 	if(listener instanceof achilles.Router) {
 		listener = listener.route;
-	} 
+	}
 
 	this.on(function(req, res, next) {
 		if(regex.test(req.url)) {
@@ -342,5 +341,29 @@ achilles.Router.prototype.route = function(req, res) {
 		});
 	};
 });
+
+var url = require("url");
+var request = require("request");
+
+achilles.Model = function() {
+	achilles.Object.call(this);
+	this.define("_id", String);
+};
+
+util.inherits(achilles.Model, achilles.Object);
+
+achilles.Model.prototype.backend = function(href) {
+	this.url = href;
+};
+
+achilles.Model.prototype.save = function() {
+	request.put({url:this.url + "/" + this._id, json: this._data}, function(err, res, body) {
+		if(err) {
+			throw err;
+		} else {
+			console.log(body);
+		}
+	});
+};
 
 module.exports = achilles;

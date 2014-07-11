@@ -1,4 +1,4 @@
-var achilles = require("../index");
+var achilles = require("../../index");
 var util = require("util");
 
 var enclosure = new achilles.EventEmitter("#enclosure");
@@ -13,10 +13,11 @@ enclosure.on("click .second", function(e) {
 	console.log(e);
 });
 
-
 function Person(name, age) {
 	achilles.Object.call(this);
 
+	this.define("name", Number);
+	this.name = 14;
 	this.define("name", String);
 	this.define("age", Number);
 	this.define("children", [Person]);
