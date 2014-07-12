@@ -6,7 +6,7 @@ var util = require("util");
 var events = require("events");
 
 /**
- * Super Dodgy Code 
+ * Super Dodgy Code
  * Overrides util.inherits such that
  * subclass inherits statics as well
 */
@@ -392,7 +392,7 @@ achilles.Model.prototype.refresh = function(cb) {
 };
 
 achilles.Model.findById = function(_id, cb) {
-	var nova = new achilles.Model();
+	var nova = new this();
 	nova._id = _id;
 	nova.refresh(cb);
 };
