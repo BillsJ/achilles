@@ -366,4 +366,19 @@ achilles.Model.prototype.save = function(cb) {
 	});
 };
 
+achilles.Model.prototype.refresh = function(cb) {
+	request.get({url: this.url + "/" + this._id, json:true}, (function(err, res, body) {
+		if(!err) {
+			this._data = body;
+		}
+		cb(err, body);
+	}).bind(this));
+};
+
+achilles.Model.findById = function(_id, cb) {
+	var nova = new achilles.Model();
+	nova._id = _id;
+	nova.refresh(cb);
+};
+
 module.exports = achilles;
