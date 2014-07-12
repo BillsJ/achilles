@@ -5,6 +5,22 @@
 var util = require("util");
 var events = require("events");
 
+/**
+ * Super Dodgy Code 
+ * Overrides util.inherits such that
+ * subclass inherits statics as well
+*/
+
+var original = util.inherits;
+util.inherits = function(subclass, superclass) {
+	original(subclass, superclass);
+	for(var n in superclass) {
+		if(n != "prototype") {
+			subclass[n] = superclass[n];
+		}
+	}
+};
+
 var achilles = {};
 
 /**
@@ -320,7 +336,7 @@ achilles.Router.prototype.route = function(req, res) {
 			throw err;
 		} else if(this._events.length != i) {
 			i++;
-			this._events[i].apply(this, [req, res, next]);
+			this._events[i - 1].apply(this, [req, res, next]);
 		} else {
 			res.writeHead(404);
 			res.end();
