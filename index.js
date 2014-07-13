@@ -389,7 +389,7 @@ achilles.Model.prototype.backend = function(href) {
 };
 
 achilles.Model.prototype.save = function(cb) {
-	request.put({url:this.url + "/" + this._id, json: this._data}, function(err, res, body) {
+	request.put({url:this.url + "/" + this._id, json: this.toJSON()}, function(err, res, body) {
 		if(cb) {
 			cb(err, body);
 		} else if(err) {
