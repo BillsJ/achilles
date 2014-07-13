@@ -425,7 +425,7 @@ achilles.Service = function(model) {
 				res.writeHead(500);
 				res.end(err);
 			} else {
-				res.write(JSON.stringify(doc.toJSON()));
+				res.end(JSON.stringify(doc.toJSON()));
 			}
 		});
 	});
