@@ -419,7 +419,7 @@ achilles.Model.findById = function(_id, cb) {
 */
 achilles.Service = function(model) {
 	achilles.Router.call(this);
-	this.on("/:_id", function(req, res) {
+	this.get("/:_id", function(req, res) {
 		model.findById(req.params._id, function(err, doc) {
 			if(err) {
 				res.writeHead(500);
