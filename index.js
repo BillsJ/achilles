@@ -109,7 +109,7 @@ achilles.Object.prototype.toJSON = function() {
 	for(var key in this._data) {
 		if(this._data[key] instanceof achilles.Object) {
 			n[key] = this._data[key].toJSON();
-		} else if(this._data[key] instanceof Array && this._type[key][0].prototype instanceof achilles.Object) { 
+		} else if(this._data[key] instanceof Array && this._type[key][0].prototype instanceof achilles.Object) {
 			n[key] = this._data[key].map(function(data) {
 				return data.toJSON();
 			});
@@ -431,6 +431,6 @@ achilles.Service = function(model) {
 	});
 };
 
-util.inherits(achilles.Service, achilles.Model);
+util.inherits(achilles.Service, achilles.Router);
 
 module.exports = achilles;
