@@ -104,6 +104,22 @@ achilles.Object.prototype.define = function(key, type) {
 	}
 };
 
+achilles.Object.prototype.toJSON = function() {
+	var n = {};
+	for(var key in this._data) {
+		if(this._data[key] instanceof achilles.Object) {
+			n[key] = this._data[key].toJSON();
+		} else if(this._data[key] instanceof Array && this._type[key][0].prototype instanceof achilles.Object) { 
+			n[key] = this._data[key].map(function(data) {
+				return data.toJSON();
+			});
+		} else {
+			n[key] = this._data[key];
+		}
+	}
+	return n;
+};
+
 achilles.Object.prototype.remove = function() {
 	this.container.splice(this.container.indexOf(this), 1);
 };
@@ -387,7 +403,7 @@ achilles.Model.prototype.refresh = function(cb) {
 		if(!err) {
 			this._data = body;
 		}
-		cb(err, body);
+		cb(err, this); // Pass back error and the model to callback
 	}).bind(this));
 };
 
@@ -396,5 +412,25 @@ achilles.Model.findById = function(_id, cb) {
 	nova._id = _id;
 	nova.refresh(cb);
 };
+
+
+/**
+   @class Bridges a model with a client
+*/
+achilles.Service = function(model) {
+	achilles.Router.call(this);
+	this.on("/:_id", function(req, res) {
+		model.findById(req.params._id, function(err, doc) {
+			if(err) {
+				res.writeHead(500);
+				res.end(err);
+			} else {
+				res.write(JSON.stringify(doc.toJSON()));
+			}
+		});
+	});
+};
+
+util.inherits(achilles.Service, achilles.Model);
 
 module.exports = achilles;
