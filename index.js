@@ -303,7 +303,6 @@ achilles.Collection.prototype.render = function() {
 	}).bind(this));
 };
 
-var http = require("http");
 var pathToRegex = require("path-to-regexp");
 
 achilles.Router = function() {
@@ -377,6 +376,10 @@ achilles.Router.prototype.route = function(req, res) {
 var url = require("url");
 var request = require("request");
 
+/**
+   @class Represents a row in a database
+   @inherits achilles.Object
+*/
 achilles.Model = function() {
 	achilles.Object.call(this);
 	this.define("_id", String);
@@ -399,20 +402,24 @@ achilles.Model.prototype.save = function(cb) {
 };
 
 achilles.Model.prototype.refresh = function(cb) {
-	request.get({url: this.url + "/" + this._id, json:true}, (function(err, res, body) {
-		if(!err) {
-			this._data = body;
-		}
-		cb(err, this); // Pass back error and the model to callback
-	}).bind(this));
+	var req = {url: this.url + "/" + this._id, json:true};
+	if(cb) {
+		request.get(req, (function(err, res, body) {
+			if(!err) {
+				this._data = body;
+			}
+			cb(err, this); // Pass back error and the model to callback
+		}).bind(this));
+	} else {
+		return request.get(req);
+	}
 };
 
 achilles.Model.findById = function(_id, cb) {
 	var nova = new this();
 	nova._id = _id;
-	nova.refresh(cb);
+	return nova.refresh(cb);
 };
-
 
 /**
    @class Bridges a model with a client
@@ -420,14 +427,7 @@ achilles.Model.findById = function(_id, cb) {
 achilles.Service = function(model) {
 	achilles.Router.call(this);
 	this.get("/:_id", function(req, res) {
-		model.findById(req.params._id, function(err, doc) {
-			if(err) {
-				res.writeHead(500);
-				res.end(err);
-			} else {
-				res.end(JSON.stringify(doc.toJSON()));
-			}
-		});
+		model.findById(req.params._id).pipe(res);
 	});
 };
 
