@@ -415,6 +415,17 @@ achilles.Model.prototype.refresh = function(cb) {
 	}
 };
 
+achilles.Model.prototype.del = function(cb) {
+	var req = {url: this.url + "/" + this._id, json:true};
+	if(cb) {
+		request.del(req, (function(err, res, body) {
+			cb(err, body);
+		}).bind(this));
+	} else {
+		return request.del(req);
+	}
+};
+
 achilles.Model.findById = function(_id, cb) {
 	var nova = new this();
 	nova._id = _id;
@@ -428,6 +439,11 @@ achilles.Service = function(model) {
 	achilles.Router.call(this);
 	this.get("/:_id", function(req, res) {
 		model.findById(req.params._id).pipe(res);
+	});
+	this.del("/:_id", function(req, res) {
+		var nova = new model();
+		nova._id = req.params._id;
+		return nova.del().pipe(res);
 	});
 };
 
