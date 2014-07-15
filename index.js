@@ -426,7 +426,7 @@ achilles.Model.prototype.del = function(cb) {
 	}
 };
 
-achilles.Model.findById = function(options, cb) {
+achilles.Model.getById = function(options, cb) {
 	var _id = options._id || options;
 	var nova = new this();
 	nova._id = _id;
@@ -446,7 +446,7 @@ achilles.Model.removeById = function(options, cb) {
 achilles.Service = function(model) {
 	achilles.Router.call(this);
 	this.get("/:_id", function(req, res) {
-		model.findById(req.params).pipe(res);
+		model.getById(req.params).pipe(res);
 	});
 	this.del("/:_id", function(req, res) {
 		model.removeById(req.params).pipe(res);
