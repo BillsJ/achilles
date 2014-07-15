@@ -426,10 +426,18 @@ achilles.Model.prototype.del = function(cb) {
 	}
 };
 
-achilles.Model.findById = function(_id, cb) {
+achilles.Model.findById = function(options, cb) {
+	var _id = options._id || options;
 	var nova = new this();
 	nova._id = _id;
 	return nova.refresh(cb);
+};
+
+achilles.Model.removeById = function(options, cb) {
+	var _id = options._id || options;
+	var nova = new this();
+	nova._id = _id;
+	return nova.del(cb);
 };
 
 /**
@@ -438,12 +446,10 @@ achilles.Model.findById = function(_id, cb) {
 achilles.Service = function(model) {
 	achilles.Router.call(this);
 	this.get("/:_id", function(req, res) {
-		model.findById(req.params._id).pipe(res);
+		model.findById(req.params).pipe(res);
 	});
 	this.del("/:_id", function(req, res) {
-		var nova = new model();
-		nova._id = req.params._id;
-		return nova.del().pipe(res);
+		model.removeById(req.params).pipe(res);
 	});
 };
 
