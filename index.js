@@ -450,7 +450,13 @@ achilles.Model.removeById = function(options, cb) {
 achilles.Service = function(model) {
 	achilles.Router.call(this);
 	this.get("/:_id", function(req, res) {
-		model.getById(req.params).pipe(res);
+		/**
+         * Piping req into model.getById means 
+		 * etag headers are also passed along
+         */
+		req
+			.pipe(model.getById(req.params))
+			.pipe(res);
 	});
 	this.del("/:_id", function(req, res) {
 		model.removeById(req.params).pipe(res);
