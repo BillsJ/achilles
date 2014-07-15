@@ -391,8 +391,12 @@ achilles.Model.prototype.backend = function(href) {
 	this.url = href;
 };
 
+achilles.Model.prototype.getUrl = function() {
+	return this.url + "/" + this._id;
+};
+
 achilles.Model.prototype.save = function(cb) {
-	request.put({url:this.url + "/" + this._id, json: this.toJSON()}, function(err, res, body) {
+	request.put({url:this.getUrl(), json: this.toJSON()}, function(err, res, body) {
 		if(cb) {
 			cb(err, body);
 		} else if(err) {
@@ -402,7 +406,7 @@ achilles.Model.prototype.save = function(cb) {
 };
 
 achilles.Model.prototype.refresh = function(cb) {
-	var req = {url: this.url + "/" + this._id, json:true};
+	var req = {url: this.getUrl(), json:true};
 	if(cb) {
 		request.get(req, (function(err, res, body) {
 			if(!err) {
@@ -416,7 +420,7 @@ achilles.Model.prototype.refresh = function(cb) {
 };
 
 achilles.Model.prototype.del = function(cb) {
-	var req = {url: this.url + "/" + this._id, json:true};
+	var req = {url: this.getUrl(), json:true};
 	if(cb) {
 		request.del(req, (function(err, res, body) {
 			cb(err, body);
