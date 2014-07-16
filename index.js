@@ -408,16 +408,22 @@ achilles.Model.prototype.getUrl = function() {
 
 achilles.Model.prototype.save = function(cb) {
 	/**
-	 * Lo! Behold! The callback-stream pattern
+	 * Lo! Behold! The callback-stream pattern!
 	 * Because of the nature of request you can use
 	 * both stream and callbacks. Its methods, you see,
 	 * return streams but also accept callbacks. These
 	 * methods in achilles.Model are desgined to work in
 	 * exactly the same way.
 	 */
-	return request.put({url:this.getUrl(), json: this.toJSON()}, cb && function(err, res, body) {
+	return request.put({json: this.toJSON(), url:this.getUrl()}, cb && function(err, res, body) {
 		cb(err, body);
 	});
+	/**
+	 * N.B. this.getUrl() must be called after this.toJSON()
+	 * because in some subclasses this.toJSON() may set an _id
+	 * if one has not been defined. And this.getUrl() relies on
+	 * an _id being defined.
+	 */
 };
 
 achilles.Model.prototype.refresh = function(cb) {
