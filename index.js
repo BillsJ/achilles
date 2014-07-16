@@ -407,43 +407,34 @@ achilles.Model.prototype.getUrl = function() {
 };
 
 achilles.Model.prototype.save = function(cb) {
-	var req = {url:this.getUrl(), json: this.toJSON()};
-	if(cb) {
-		request.put(req, function(err, res, body) {
-			if(cb) {
-				cb(err, body);
-			} else if(err) {
-				throw err;
-			}
-		});
-	} else {
-		return request.put(req);
-	}
+	/**
+	 * Lo! Behold! The callback-stream pattern
+	 * Because of the nature of request you can use
+	 * both stream and callbacks. Its methods, you see,
+	 * return streams but also accept callbacks. These
+	 * methods in achilles.Model are desgined to work in
+	 * exactly the same way.
+	 */
+	return request.put({url:this.getUrl(), json: this.toJSON()}, cb && function(err, res, body) {
+		cb(err, body);
+	});
 };
 
 achilles.Model.prototype.refresh = function(cb) {
-	var req = {url: this.getUrl(), json:true};
-	if(cb) {
-		request.get(req, (function(err, res, body) {
-			if(!err) {
-				this._data = body;
-			}
+	return request.get({url: this.getUrl(), json:true}, (function(err, res, body) {
+		if(!err) {
+			this._data = body;
+		}
+		if(cb) {
 			cb(err, this); // Pass back error and the model to callback
-		}).bind(this));
-	} else {
-		return request.get(req);
-	}
+		}
+	}).bind(this));
 };
 
 achilles.Model.prototype.del = function(cb) {
-	var req = {url: this.getUrl(), json:true};
-	if(cb) {
-		request.del(req, (function(err, res, body) {
-			cb(err, body);
-		}).bind(this));
-	} else {
-		return request.del(req);
-	}
+	return request.del({url: this.getUrl(), json:true}, cb && function(err, res, body) {
+		cb(err, body);
+	});
 };
 
 achilles.Model.getById = function(options, cb) {
