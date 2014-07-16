@@ -325,7 +325,7 @@ achilles.Router.prototype.on = function(listener) {
 
 achilles.Router.prototype.use = function(url, listener) {
 	var keys = [];
-	if(typeof url === "function") {
+	if(typeof url === "function" || listener.instanceof achilles.Router) {
 		listener = url;
 		var regex = new RegExp(".*", "g");
 	} else {
@@ -351,7 +351,7 @@ achilles.Router.prototype.use = function(url, listener) {
 	});
 };
 
-achilles.Router.prototype.route = function(req, res) {
+achilles.Router.prototype.route = function(req, res, cb) {
 	var i = 0;
 	req.originalUrl = req.url;
 	var next = (function(err) {
@@ -361,6 +361,8 @@ achilles.Router.prototype.route = function(req, res) {
 		} else if(this._events.length != i) {
 			i++;
 			this._events[i - 1].apply(this, [req, res, next]);
+		} else if(cb) {
+			cb();
 		} else {
 			res.writeHead(404);
 			res.end();
