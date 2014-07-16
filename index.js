@@ -55,6 +55,15 @@ var ensureType = function(val, type) {
 			ensureType(value, type);
 		});
 		return val;
+	} else if(type === Date && typeof val === "string") {
+		/** 
+		 * Dates are unfortunately not a valid part of JSON,
+		 * therefore it is nothing less than essential to 
+		 * have string to date casting, especially because
+		 * certain databases use JSON inherently and
+		 * JSON is used in HTTP
+		 */
+		return new Date(val);
 	} else if(val instanceof type) {
 		return val;
 	} else {
@@ -396,13 +405,18 @@ achilles.Model.prototype.getUrl = function() {
 };
 
 achilles.Model.prototype.save = function(cb) {
-	request.put({url:this.getUrl(), json: this.toJSON()}, function(err, res, body) {
-		if(cb) {
-			cb(err, body);
-		} else if(err) {
-			throw err;
-		}
-	});
+	var req = {url:this.getUrl(), json: this.toJSON()};
+	if(cb) {
+		request.put(req, function(err, res, body) {
+			if(cb) {
+				cb(err, body);
+			} else if(err) {
+				throw err;
+			}
+		});
+	} else {
+		return request.put(req);
+	}
 };
 
 achilles.Model.prototype.refresh = function(cb) {
@@ -448,15 +462,31 @@ achilles.Model.removeById = function(options, cb) {
    @class Bridges a model with a client
 */
 achilles.Service = function(model) {
+	/**
+	 * Throughout achilles.Service, the streaming API
+	 * is used because it is so much more efficent.
+	 * This is one of achilles.Services' major advantages.
+	 */
 	achilles.Router.call(this);
 	this.get("/:_id", function(req, res) {
 		/**
          * Piping req into model.getById means 
-		 * etag headers are also passed along
+		 * etag headers are also passed along.
          */
 		req
 			.pipe(model.getById(req.params))
 			.pipe(res);
+	});
+	this.post("/", function(req, res) {
+		/**
+		  * `nova` means `new` Latin & `new` is a
+		  * reserved keyword so, you know
+		  */
+		var nova = new model();
+		for(var key in req.body) {
+			nova[key] = req.body[key];
+		}
+		model.save().pipe(res);
 	});
 	this.del("/:_id", function(req, res) {
 		model.removeById(req.params).pipe(res);
