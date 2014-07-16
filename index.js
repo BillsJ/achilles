@@ -56,9 +56,9 @@ var ensureType = function(val, type) {
 		});
 		return val;
 	} else if(type === Date && typeof val === "string") {
-		/** 
+		/**
 		 * Dates are unfortunately not a valid part of JSON,
-		 * therefore it is nothing less than essential to 
+		 * therefore it is nothing less than essential to
 		 * have string to date casting, especially because
 		 * certain databases use JSON inherently and
 		 * JSON is used in HTTP
@@ -325,7 +325,7 @@ achilles.Router.prototype.on = function(listener) {
 
 achilles.Router.prototype.use = function(url, listener) {
 	var keys = [];
-	if(typeof url === "function" || listener.instanceof achilles.Router) {
+	if(typeof url === "function" || listener instanceof achilles.Router) {
 		listener = url;
 		var regex = new RegExp(".*", "g");
 	} else {
@@ -472,9 +472,9 @@ achilles.Service = function(model) {
 	achilles.Router.call(this);
 	this.get("/:_id", function(req, res) {
 		/**
-         * Piping req into model.getById means 
+	 * Piping req into model.getById means
 		 * etag headers are also passed along.
-         */
+	 */
 		req
 			.pipe(model.getById(req.params))
 			.pipe(res);
