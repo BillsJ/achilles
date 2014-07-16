@@ -325,7 +325,7 @@ achilles.Router.prototype.on = function(listener) {
 
 achilles.Router.prototype.use = function(url, listener) {
 	var keys = [];
-	if(typeof url === "function" || listener instanceof achilles.Router) {
+	if(typeof url === "function" || url instanceof achilles.Router) {
 		listener = url;
 		var regex = new RegExp(".*", "g");
 	} else {
