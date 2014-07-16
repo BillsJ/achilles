@@ -488,7 +488,7 @@ achilles.Service = function(model) {
 		for(var key in req.body) {
 			nova[key] = req.body[key];
 		}
-		model.save().pipe(res);
+		nova.save().pipe(res);
 	});
 	this.del("/:_id", function(req, res) {
 		model.removeById(req.params).pipe(res);
