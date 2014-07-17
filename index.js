@@ -469,19 +469,28 @@ achilles.Service = function(model) {
 	achilles.Router.call(this);
 	this.get("/:_id", function(req, res) {
 		/**
-	 * Piping req into model.getById means
+		 * Piping req into model.getById means
 		 * etag headers are also passed along.
-	 */
+		 */
 		req
 			.pipe(model.getById(req.params))
 			.pipe(res);
 	});
+
 	this.post("/", function(req, res) {
 		/**
 		  * `nova` means `new` Latin & `new` is a
 		  * reserved keyword so, you know
 		  */
 		var nova = new model();
+		for(var key in req.body) {
+			nova[key] = req.body[key];
+		}
+		nova.save().pipe(res);
+	});
+	this.put("/:_id", function(req, res) {
+		var nova = new model();
+		nova._id = req.params._id;
 		for(var key in req.body) {
 			nova[key] = req.body[key];
 		}
