@@ -388,9 +388,11 @@ var url = require("url");
 var request = require("request");
 
 /**
-   @class Represents a row in a database
-   @inherits achilles.Object
-*/
+ * A model is a class to represent a row
+ * in a database, for example a row in Excel.
+ * Unlike a regular class this means that a
+ * model can be saved, using .save().
+ */
 achilles.Model = function() {
 	achilles.Object.call(this);
 	this.define("_id", String);
@@ -398,12 +400,11 @@ achilles.Model = function() {
 
 util.inherits(achilles.Model, achilles.Object);
 
-achilles.Model.prototype.backend = function(href) {
-	this.url = href;
-};
-
+/**
+ * Returns the address of a given model
+ */
 achilles.Model.prototype.getUrl = function() {
-	return this.url + "/" + this._id;
+	return this.constructor.URL + "/" + this._id;
 };
 
 achilles.Model.prototype.save = function(cb) {
