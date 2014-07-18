@@ -355,7 +355,7 @@ achilles.Router.prototype.use = function(url, listener) {
 
 achilles.Router.prototype.route = function(req, res, cb) {
 	var i = 0;
-	var u = url.parse(req.url);
+	var u = url.parse(req.url, true);
 	req.query = u.query; // Sets req.query
 	req.originalUrl = req.url; // Needed by some plugins
 	var next = (function(err) {
