@@ -486,6 +486,9 @@ achilles.Service = function(model) {
 	 * This is one of achilles.Services' major advantages.
 	 */
 	achilles.Router.call(this);
+	this.get("/", function(req, res) {
+		model.find(req.query.limit).pipe(res);
+	});
 	this.get("/:_id", function(req, res) {
 		/**
 		 * Piping req into model.getById means
