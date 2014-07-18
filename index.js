@@ -4,6 +4,8 @@
 
 var util = require("util");
 var events = require("events");
+var url = require("url");
+var request = require("request");
 
 /**
  * Super Dodgy Code
@@ -353,7 +355,9 @@ achilles.Router.prototype.use = function(url, listener) {
 
 achilles.Router.prototype.route = function(req, res, cb) {
 	var i = 0;
-	req.originalUrl = req.url;
+	var u = url.parse(req.url);
+	req.query = u.query; // Sets req.query
+	req.originalUrl = req.url; // Needed by some plugins
 	var next = (function(err) {
 		if(err) {
 			console.log(err);
@@ -384,8 +388,6 @@ achilles.Router.prototype.route = function(req, res, cb) {
 	};
 });
 
-var url = require("url");
-var request = require("request");
 
 /**
  * A model is a class to represent a row
