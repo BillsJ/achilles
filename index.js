@@ -458,6 +458,24 @@ achilles.Model.removeById = function(options, cb) {
 	return nova.del(cb);
 };
 
+achilles.Model.getAllDocsURL = function() {
+	return this.constructor.URL;
+};
+
+achilles.Model.find = function(limit, cb) {
+	if(typeof limit === "function") {
+		cb = limit;
+		limit = undefined;
+	}
+	var url = this.getAllDocsURL();
+	if(limit) {
+		url +=  "?limit=" + limit;
+	}
+	return request.get({url: url, json:true}, cb && function(err, res, body) {
+		cb(err, body);
+	});
+};
+
 /**
    @class Bridges a model with a client
 */
