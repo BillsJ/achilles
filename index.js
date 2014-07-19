@@ -10,8 +10,8 @@ var request = require("request");
 /**
  * Super Dodgy Code
  * Overrides util.inherits such that
- * subclass inherits statics as well
-*/
+ * a subclass inherits statics as well
+ */
 
 var original = util.inherits;
 util.inherits = function(subclass, superclass) {
@@ -461,7 +461,7 @@ achilles.Model.removeById = function(options, cb) {
 };
 
 achilles.Model.getAllDocsURL = function() {
-	return this.constructor.URL;
+	return url.parse(this.constructor.URL);
 };
 
 achilles.Model.find = function(limit, cb) {
@@ -469,11 +469,11 @@ achilles.Model.find = function(limit, cb) {
 		cb = limit;
 		limit = undefined;
 	}
-	var url = this.getAllDocsURL();
+	var URL = this.getAllDocsURL();
 	if(limit) {
-		url +=  "?limit=" + limit;
+		URL.query.limit = limit;
 	}
-	return request.get({url: url, json:true}, cb && function(err, res, body) {
+	return request.get({url: url.format(URL), json:true}, cb && function(err, res, body) {
 		cb(err, body);
 	});
 };
