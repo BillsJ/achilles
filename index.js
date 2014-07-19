@@ -355,10 +355,12 @@ achilles.Router.prototype.use = function(url, listener) {
 
 achilles.Router.prototype.route = function(req, res, cb) {
 	var i = 0;
-	var u = url.parse(req.url, true);
-	req.query = u.query; // Sets req.query
-	req.url = u.pathname; // Strip queries off url
-	req.originalUrl = u.href; // Original URL
+	if(!req.query) { // ENSURE REQ.QUERY IS NOT SET TWICE (BY ACHILLES.ROUTER USING ACHILLES.ROUTER)
+		var u = url.parse(req.url, true);
+		req.query = u.query; // Sets req.query
+		req.url = u.pathname; // Strip queries off url
+		req.originalUrl = u.href; // Original URL
+	}
 	var next = (function(err) {
 		if(err) {
 			console.log(err);
