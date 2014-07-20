@@ -415,7 +415,7 @@ util.inherits(achilles.Model, achilles.Object);
 /**
  * Returns the address of a given model
  */
-achilles.Model.prototype.getUrl = function() {
+achilles.Model.prototype.getURL = function() {
 	return this.constructor.URL + "/" + this._id;
 };
 
@@ -428,19 +428,19 @@ achilles.Model.prototype.save = function(cb) {
 	 * methods in achilles.Model are desgined to work in
 	 * exactly the same way.
 	 */
-	return request.put({json: this.toJSON(), url:this.getUrl()}, cb && function(err, res, body) {
+	return request.put({json: this.toJSON(), url:this.getURL()}, cb && function(err, res, body) {
 		cb(err, body);
 	});
 	/**
-	 * N.B. this.getUrl() must be called after this.toJSON()
+	 * N.B. this.getURL() must be called after this.toJSON()
 	 * because in some subclasses this.toJSON() may set an _id
-	 * if one has not been defined. And this.getUrl() relies on
+	 * if one has not been defined. And this.getURL() relies on
 	 * an _id being defined.
 	 */
 };
 
 achilles.Model.prototype.refresh = function(cb) {
-	return request.get({url: this.getUrl(), json:true}, (function(err, res, body) {
+	return request.get({url: this.getURL(), json:true}, (function(err, res, body) {
 		if(!err) {
 			this._data = body;
 		}
@@ -451,7 +451,7 @@ achilles.Model.prototype.refresh = function(cb) {
 };
 
 achilles.Model.prototype.del = function(cb) {
-	return request.del({url: this.getUrl(), json:true}, cb && function(err, res, body) {
+	return request.del({url: this.getURL(), json:true}, cb && function(err, res, body) {
 		cb(err, body);
 	});
 };
