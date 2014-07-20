@@ -503,7 +503,7 @@ achilles.Service = function(model, view) {
 		if(req.accepts.types("html", "json") === "json") {
 			model.find(req.query.limit).pipe(res);
 		} else {
-			res.end(view());
+			res.end(view({operation:"index", path:""}));
 		}
 	});
 	this.get("/:_id", function(req, res) {
@@ -516,10 +516,9 @@ achilles.Service = function(model, view) {
 				.pipe(model.getById(req.params))
 				.pipe(res);
 		} else {
-			res.end(view());
+			res.end(view({operation:"get", path:""}));
 		}
 	});
-
 	this.post("/", function(req, res) {
 		/**
 		  * `nova` means `new` Latin & `new` is a
