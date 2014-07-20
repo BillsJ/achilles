@@ -6,6 +6,7 @@ var util = require("util");
 var events = require("events");
 var url = require("url");
 var request = require("request");
+var accepts = require("accepts");
 
 /**
  * Super Dodgy Code
@@ -355,11 +356,17 @@ achilles.Router.prototype.use = function(url, listener) {
 
 achilles.Router.prototype.route = function(req, res, cb) {
 	var i = 0;
-	if(!req.query) { // ENSURE REQ.QUERY IS NOT SET TWICE (BY ACHILLES.ROUTER USING ACHILLES.ROUTER)
+	if(!req.query) { // Ensure req.query is not set twice (by achille.Router using achilles.Router)
 		var u = url.parse(req.url, true);
 		req.query = u.query; // Sets req.query
 		req.url = u.pathname; // Strip queries off url
 		req.originalUrl = u.href; // Original URL
+	}
+	/**
+	 * Content Negotiation
+	 */
+	if(!req.accepts) {
+		req.accepts = accepts(req);
 	}
 	var next = (function(err) {
 		if(err) {
@@ -485,7 +492,7 @@ achilles.Model.find = function(limit, cb) {
 /**
    @class Bridges a model with a client
 */
-achilles.Service = function(model) {
+achilles.Service = function(model, view) {
 	/**
 	 * Throughout achilles.Service, the streaming API
 	 * is used because it is so much more efficent.
@@ -493,16 +500,24 @@ achilles.Service = function(model) {
 	 */
 	achilles.Router.call(this);
 	this.get("/", function(req, res) {
-		model.find(req.query.limit).pipe(res);
+		if(req.accepts.types("html", "json") === "json") {
+			model.find(req.query.limit).pipe(res);
+		} else {
+
+		}
 	});
 	this.get("/:_id", function(req, res) {
-		/**
-		 * Piping req into model.getById means
-		 * etag headers are also passed along.
-		 */
-		req
-			.pipe(model.getById(req.params))
-			.pipe(res);
+		if(req.accepts.types("html", "json") === "json") {
+			/**
+			 * Piping req into model.getById means
+			 * etag headers are also passed along.
+			 */
+			req
+				.pipe(model.getById(req.params))
+				.pipe(res);
+		} else {
+			res.end(view());
+		}
 	});
 
 	this.post("/", function(req, res) {
