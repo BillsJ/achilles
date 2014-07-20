@@ -473,6 +473,7 @@ achilles.Model.find = function(limit, cb) {
 		limit = undefined;
 	}
 	var URL = this.getAllDocsURL();
+	delete URL.search;
 	if(limit) {
 		URL.query.limit = limit;
 	}
