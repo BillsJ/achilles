@@ -503,7 +503,7 @@ achilles.Service = function(model, view) {
 		if(req.accepts.types("html", "json") === "json") {
 			model.find(req.query.limit).pipe(res);
 		} else {
-
+			res.end(view());
 		}
 	});
 	this.get("/:_id", function(req, res) {
