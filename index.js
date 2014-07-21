@@ -489,6 +489,17 @@ achilles.Model.find = function(limit, cb) {
 	});
 };
 
+achilles.Model.getSubDocsTree = function() {
+	var n = new this();
+	var tree = {};
+	for(var key in n._type) {
+		if(n._type[key] instanceof Array && n._type[key][0].prototype instanceof achilles.Object) {
+			tree[key] = n._type[key][0];
+		}
+	}
+	return tree;
+};
+
 /**
    @class Bridges a model with a client
 */
