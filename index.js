@@ -514,7 +514,7 @@ achilles.Service = function(model, view) {
 		if(req.accepts.types("html", "json") === "json") {
 			model.find(req.query.limit).pipe(res);
 		} else {
-			res.end(view({operation:"index", path:""}));
+			res.end(view({operation:"index", key:""}));
 		}
 	});
 	this.get("/:_id", function(req, res) {
@@ -527,7 +527,7 @@ achilles.Service = function(model, view) {
 				.pipe(model.getById(req.params))
 				.pipe(res);
 		} else {
-			res.end(view({operation:"get", path:""}));
+			res.end(view({operation:"get", key:""}));
 		}
 	});
 	this.post("/", function(req, res) {
@@ -552,6 +552,33 @@ achilles.Service = function(model, view) {
 	this.del("/:_id", function(req, res) {
 		model.removeById(req.params).pipe(res);
 	});
+	var subdocs = model.getSubDocsTree();
+	for(var key in subdocs) {
+		var value = subdocs[key];
+		achilles.Router.call(this);
+		this.get("/:_base/" + key, function(req, res) {
+			if(req.accepts.types("html", "json") === "json") {
+				model.subdoc(key, req.params.base).pipe(res);
+			} else {
+				res.end(view({operation:"index", key:key}));
+			}
+		});
+		this.get("/:_base/" + key + "/:_id", function(req, res) {
+			if(req.accepts.types("html", "json") === "json") {
+				model.subdoc(key, req.params.base).pipe(res);
+			} else {
+				res.end(view({operation:"get", key:key}));
+			}
+		});
+		this.post("/:_base/" + key + "/", function(req, res) {
+			var nova  = new model();
+			nova._id = req.params._base;
+			nova.refresh(function() {
+				nova[key].push(new value(req.body));
+				nova.save().pipe(res);
+			});	
+		});
+	}
 };
 
 util.inherits(achilles.Service, achilles.Router);
