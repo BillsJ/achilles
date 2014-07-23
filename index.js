@@ -511,14 +511,14 @@ achilles.Service = function(model, view) {
 	 */
 	achilles.Router.call(this);
 	this.get("/", function(req, res) {
-		if(req.accepts.types("html", "json") === "json") {
+		if(req.accepts.types("html", "json") === "json" || !view) {
 			model.find(req.query.limit).pipe(res);
 		} else {
 			res.end(view({operation:"index", key:""}));
 		}
 	});
 	this.get("/:_id", function(req, res) {
-		if(req.accepts.types("html", "json") === "json") {
+		if(req.accepts.types("html", "json") === "json" || !view) {
 			/**
 			 * Piping req into model.getById means
 			 * etag headers are also passed along.
@@ -557,14 +557,14 @@ achilles.Service = function(model, view) {
 		var value = subdocs[key];
 		achilles.Router.call(this);
 		this.get("/:_base/" + key, function(req, res) {
-			if(req.accepts.types("html", "json") === "json") {
+			if(req.accepts.types("html", "json") === "json" || !view) {
 				model.subdoc(key, req.params.base).pipe(res);
 			} else {
 				res.end(view({operation:"index", key:key}));
 			}
 		});
 		this.get("/:_base/" + key + "/:_id", function(req, res) {
-			if(req.accepts.types("html", "json") === "json") {
+			if(req.accepts.types("html", "json") === "json" || !view) {
 				model.subdoc(key, req.params.base).pipe(res);
 			} else {
 				res.end(view({operation:"get", key:key}));
