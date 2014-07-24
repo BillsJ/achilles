@@ -342,7 +342,6 @@ achilles.Router.prototype.use = function(url, listener) {
 	this.on(function(req, res, next) {
 		if(regex.test(req.url)) {
 			var values = regex.exec(req.url);
-			console.log(values);
 			var obj = {};
 			keys.forEach(function(key, i) {
 				obj[key.name] = values[i+1];
@@ -510,7 +509,6 @@ achilles.Service = function(model, view) {
 	 * is used because it is so much more efficent.
 	 * This is one of achilles.Services' major advantages.
 	 */
-	achilles.Router.call(this);
 	this.get("/", function(req, res) {
 		if(req.accepts.types("html", "json") === "json" || !view) {
 			model.find(req.query.limit).pipe(res);
