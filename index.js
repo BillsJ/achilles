@@ -398,6 +398,15 @@ achilles.Router.prototype.route = function(req, res, cb) {
 	};
 });
 
+achilles.Router.prototype.view = function(url, view) {
+	this.get(url, function(req, res, cb) {
+		if(req.accepts.types("html")) {
+			res.end(view());
+		} else {
+			cb();
+		}
+	});
+};
 
 /**
  * A model is a class to represent a row
@@ -503,81 +512,84 @@ achilles.Model.getSubDocsTree = function() {
 /**
    @class Bridges a model with a client
 */
-achilles.Service = function(model, view) {
+achilles.Service = function(model) {
 	achilles.Router.call(this);
 	/**
-	 * Throughout achilles.Service, the streaming API
-	 * is used because it is so much more efficent.
-	 * This is one of achilles.Services' major advantages.
+	 * process.nextTick allows you add your own
+	 * authentication or formatter functions
 	 */
-	this.get("/", function(req, res) {
-		if(req.accepts.types("html", "json") === "json" || !view) {
-			model.find(req.query.limit).pipe(res);
-		} else {
-			res.end(view({operation:"index", key:""}));
-		}
-	});
-	this.get("/:_id", function(req, res) {
-		if(req.accepts.types("html", "json") === "json" || !view) {
-			/**
-			 * Piping req into model.getById means
-			 * etag headers are also passed along.
-			 */
-			req
-				.pipe(model.getById(req.params))
-				.pipe(res);
-		} else {
-			res.end(view({operation:"get", key:""}));
-		}
-	});
-	this.post("/", function(req, res) {
+	process.nextTick((function() {
 		/**
-		  * `nova` means `new` Latin & `new` is a
-		  * reserved keyword so, you know
-		  */
-		var nova = new model();
-		for(var key in req.body) {
-			nova[key] = req.body[key];
-		}
-		nova.save().pipe(res);
-	});
-	this.put("/:_id", function(req, res) {
-		var nova = new model();
-		nova._id = req.params._id;
-		for(var key in req.body) {
-			nova[key] = req.body[key];
-		}
-		nova.save().pipe(res);
-	});
-	this.del("/:_id", function(req, res) {
-		model.removeById(req.params).pipe(res);
-	});
-	var subdocs = model.getSubDocsTree();
-	for(var key in subdocs) {
-		var value = subdocs[key];
-		this.get("/:_base/" + key, function(req, res) {
-			if(req.accepts.types("html", "json") === "json" || !view) {
-				model.subdoc(key, req.params._base).pipe(res);
-			} else {
-				res.end(view({operation:"index", key:key}));
+		 * Throughout achilles.Service, the streaming API
+		 * is used because it is so much more efficent.
+		 * This is one of achilles.Services' major advantages.
+		 */
+		this.get("/", function(req, res) {
+			model.find(req.query.limit).pipe(res);
+		});
+		this.get("/:_id", function(req, res) {
+				/**
+				 * Piping req into model.getById means
+				 * etag headers are also passed along.
+				 */
+				req
+					.pipe(model.getById(req.params))
+					.pipe(res);
+		});
+		this.post("/", function(req, res) {
+			/**
+			 * `nova` means `new` Latin & `new` is a
+			 * reserved keyword so, you know
+			 */
+			var nova = new model();
+			for(var key in req.body) {
+				nova[key] = req.body[key];
 			}
+			nova.save().pipe(res);
 		});
-		this.get("/:_base/" + key + "/:_id", function(req, res) {
-			if(req.accepts.types("html", "json") === "json" || !view) {
-				model.subdoc(key, req.params._base).pipe(res);
-			} else {
-				res.end(view({operation:"get", key:key}));
+		this.put("/:_id", function(req, res) {
+			var nova = new model();
+			nova._id = req.params._id;
+			for(var key in req.body) {
+				nova[key] = req.body[key];
 			}
+			nova.save().pipe(res);
 		});
-		this.post("/:_base/" + key + "/", function(req, res) {
-			var nova  = new model();
-			nova._id = req.params._base;
-			nova.refresh(function() {
-				nova[key].push(new value(req.body));
-				nova.save().pipe(res);
-			});	
+		this.del("/:_id", function(req, res) {
+			model.removeById(req.params).pipe(res);
 		});
-	}
+		var subdocs = model.getSubDocsTree();
+		for(var key in subdocs) {
+			var value = subdocs[key];
+			this.get("/:_base/" + key, function(req, res) {
+				model.subdoc(key, req.params._base).pipe(res);
+			});
+			this.get("/:_base/" + key + "/:_id", function(req, res) {
+				model.subdoc(key, req.params._base).pipe(res);
+			});
+			this.post("/:_base/" + key + "/", function(req, res) {
+				var nova  = new model();
+				nova._id = req.params._base;
+				nova.refresh(function() {
+					nova[key].push(new value(req.body));
+					nova.save().pipe(res);
+				});
+			});
+			this.put("/:_base/" + key + "/" + "/:_id", function(req, res) {
+				var nova  = new model();
+				nova._id = req.params._base;
+				nova.refresh(function() {
+					var n = new value();
+					n._id = req.params._id;
+					for(var key in req.body) {
+						n[key] = req.body[key];
+					}
+					nova[key].push(n);
+					nova.save().pipe(res);
+				});
+			});
+		}
+	}).bind(this));
 };
 
 util.inherits(achilles.Service, achilles.Router);
