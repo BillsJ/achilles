@@ -342,9 +342,10 @@ achilles.Router.prototype.use = function(url, listener) {
 	this.on(function(req, res, next) {
 		if(regex.test(req.url)) {
 			var values = regex.exec(req.url);
+			console.log(values);
 			var obj = {};
 			keys.forEach(function(key, i) {
-				obj[key.name] = values[i];
+				obj[key.name] = values[i+1];
 			});
 			req.params = obj;
 			listener(req, res, next);
@@ -558,14 +559,14 @@ achilles.Service = function(model, view) {
 		achilles.Router.call(this);
 		this.get("/:_base/" + key, function(req, res) {
 			if(req.accepts.types("html", "json") === "json" || !view) {
-				model.subdoc(key, req.params.base).pipe(res);
+				model.subdoc(key, req.params._base).pipe(res);
 			} else {
 				res.end(view({operation:"index", key:key}));
 			}
 		});
 		this.get("/:_base/" + key + "/:_id", function(req, res) {
 			if(req.accepts.types("html", "json") === "json" || !view) {
-				model.subdoc(key, req.params.base).pipe(res);
+				model.subdoc(key, req.params._base).pipe(res);
 			} else {
 				res.end(view({operation:"get", key:key}));
 			}
