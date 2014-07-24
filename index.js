@@ -504,6 +504,7 @@ achilles.Model.getSubDocsTree = function() {
    @class Bridges a model with a client
 */
 achilles.Service = function(model, view) {
+	achilles.Router.call(this);
 	/**
 	 * Throughout achilles.Service, the streaming API
 	 * is used because it is so much more efficent.
@@ -554,7 +555,6 @@ achilles.Service = function(model, view) {
 	var subdocs = model.getSubDocsTree();
 	for(var key in subdocs) {
 		var value = subdocs[key];
-		achilles.Router.call(this);
 		this.get("/:_base/" + key, function(req, res) {
 			if(req.accepts.types("html", "json") === "json" || !view) {
 				model.subdoc(key, req.params._base).pipe(res);
