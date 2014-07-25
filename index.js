@@ -562,18 +562,16 @@ achilles.Service = function(model) {
 		for(var key in subdocs) {
 			var value = subdocs[key];
 			this.get("/:_base/" + key, function(req, res) {
-				model.subdoc(key, req.params._base).pipe(res);
+				model.subdoc(key, req.params._base)
+					.pipe(res);
 			});
 			this.get("/:_base/" + key + "/:_id", function(req, res) {
-				model.subdoc(key, req.params._base).pipe(res);
+				model.subdoc(key, req.params._base)
+					.pipe(res);
 			});
 			this.post("/:_base/" + key + "/", function(req, res) {
-				var nova  = new model();
-				nova._id = req.params._base;
-				nova.refresh(function() {
-					nova[key].push(new value(req.body));
-					nova.save().pipe(res);
-				});
+				model.subdoc(key, req.params._base, new value(req.body))
+					.pipe(res);
 			});
 			this.put("/:_base/" + key + "/" + "/:_id", function(req, res) {
 				var nova  = new model();
