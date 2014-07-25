@@ -465,6 +465,13 @@ achilles.Model.prototype.save = function(cb) {
 	 */
 };
 
+/*
+ * TODO: Add Fault tolerance to achilles.Model
+ */
+achilles.Model.prototype.ref = function(property, model) {
+	this.define(property, String);
+};
+
 achilles.Model.prototype.refresh = function(cb) {
 	return request.get({url: this.getURL(), json:true}, (function(err, res, body) {
 		if(!err) {
