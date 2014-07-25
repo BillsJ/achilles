@@ -575,8 +575,8 @@ achilles.Service = function(model) {
 			});
 			this.post("/:_base/" + key + "/", function(req, res) {
 				var z = new value();
-				for(var key in req.body) {
-					z[key] = req.body[z];
+				for(var k in req.body) {
+					z[k] = req.body[z];
 				}
 				model.subdoc(key, req.params._base, z.toJSON())
 					.pipe(res);
