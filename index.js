@@ -574,7 +574,11 @@ achilles.Service = function(model) {
 					.pipe(res);
 			});
 			this.post("/:_base/" + key + "/", function(req, res) {
-				model.subdoc(key, req.params._base, new value(req.body))
+				var z = new value();
+				for(var key in req.body) {
+					z[key] = req.body[z];
+				}
+				model.subdoc(key, req.params._base, z.toJSON())
 					.pipe(res);
 			});
 			this.put("/:_base/" + key + "/" + "/:_id", function(req, res) {
