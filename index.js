@@ -319,7 +319,24 @@ var pathToRegex = require("path-to-regexp");
 
 achilles.Router = function() {
 	this._events = [];
+	this.formatters = {};
 	this.route = this.route.bind(this);
+};
+
+achilles.Router.prototype.addFormatter = function(from, to, stream) {
+	if(!this.formatters[from]) {
+		this.formatters[from] = {};
+	}
+	this.formatters[from][to] = stream;
+	for(var f in this.formatters[to]) {
+		if(from != f) {
+			var v = this.formatters[to][f];
+			this.addFormatter(from, f, function() {
+				stream()
+					.pipe(v());
+			});
+		}
+	}
 };
 
 achilles.Router.prototype.on = function(listener) {
