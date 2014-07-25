@@ -525,10 +525,12 @@ achilles.Service = function(model) {
 		 * This is one of achilles.Services' major advantages.
 		 */
 		this.get("/", function(req, res) {
-			model.find(req.query.limit).pipe(res);
+			req
+				.pipe(model.find(req.query.limit))
+				.pipe(res);
 		});
 		this.get("/:_id", function(req, res) {
-				/**
+				/*
 				 * Piping req into model.getById means
 				 * etag headers are also passed along.
 				 */
@@ -537,9 +539,9 @@ achilles.Service = function(model) {
 					.pipe(res);
 		});
 		this.post("/", function(req, res) {
-			/**
+			/*
 			 * `nova` means `new` Latin & `new` is a
-			 * reserved keyword so, you know
+			 * reserved keyword so you know
 			 */
 			var nova = new model();
 			for(var key in req.body) {
@@ -562,11 +564,13 @@ achilles.Service = function(model) {
 		for(var key in subdocs) {
 			var value = subdocs[key];
 			this.get("/:_base/" + key, function(req, res) {
-				model.subdoc(key, req.params._base)
+				req
+					.pipe(model.subdoc(key, req.params._base))
 					.pipe(res);
 			});
 			this.get("/:_base/" + key + "/:_id", function(req, res) {
-				model.subdoc(key, req.params._base)
+				req
+					.pipe(model.subdoc(key, req.params._base, req.params._id))
 					.pipe(res);
 			});
 			this.post("/:_base/" + key + "/", function(req, res) {
