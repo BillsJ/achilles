@@ -329,7 +329,7 @@ achilles.Router.prototype.addFormatter = function(from, to, stream) {
 		this.formatters[from] = {};
 	}
 	this.formatters[from][to] = stream;
-	for(var f in this.formatters[to]) {			
+	for(var f in this.formatters[to]) {
 		var v = this.formatters[to][f];
 		this.addFormatter(from, f, function() {
 			stream()
@@ -348,6 +348,10 @@ achilles.Router.prototype.use = function(url, listener) {
 		listener = url;
 		var regex = new RegExp(".*", "g");
 	} else {
+		if(listener instanceof achilles.Router) {
+			var original = url;
+			url += "/(.*)";
+		}
 		var regex = pathToRegex(url, keys);
 	}
 
@@ -363,6 +367,9 @@ achilles.Router.prototype.use = function(url, listener) {
 				obj[key.name] = values[i+1];
 			});
 			req.params = obj;
+			if(original) {
+				req.url = req.url(original.length);
+			}
 			listener(req, res, next);
 		} else {
 			next();
