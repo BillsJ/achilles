@@ -350,7 +350,7 @@ achilles.Router.prototype.use = function(url, listener) {
 	} else {
 		if(listener instanceof achilles.Router) {
 			var original = url;
-			url += "/(.*)";
+			url += "/:foo?*";
 		}
 		var regex = pathToRegex(url, keys);
 	}
