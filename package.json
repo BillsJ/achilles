@@ -1,6 +1,6 @@
 {
   "name": "achilles",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Lightweight framework for structured web applications",
   "repository": "https://github.com/HashanP/achilles",
   "main": "index.js",
@@ -21,7 +21,8 @@
   "dependencies": {
     "path-to-regexp": "~0.2.3",
     "request": "~2.37.0",
-    "accepts": "~1.0.7"
+    "accepts": "~1.0.7",
+    "response-redirect": "0.0.1"
   },
   "devDependencies": {
     "browserify": "~4.1.8",
@@ -31,6 +32,10 @@
     "cookie-parser": "~1.3.2",
     "express-session": "~1.6.4",
     "body-parser": "~1.4.3",
-    "morgan": "~1.1.1"
+    "morgan": "~1.1.1",
+    "json2csv-stream": "~0.1.2",
+    "ogg": "~1.1.1",
+    "vorbis": "~0.1.0",
+    "lame": "~1.1.0"
   }
 }
