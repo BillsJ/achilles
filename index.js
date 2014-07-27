@@ -350,7 +350,7 @@ achilles.Router.prototype.use = function(url, listener) {
 	} else {
 		if(listener instanceof achilles.Router) {
 			var original = url;
-			url += "/:foo?*";
+			url += "/:foo*";
 		}
 		var regex = pathToRegex(url, keys);
 	}
@@ -368,7 +368,10 @@ achilles.Router.prototype.use = function(url, listener) {
 			});
 			req.params = obj;
 			if(original) {
-				req.url = req.url(original.length);
+				req.url = req.url.slice(original.length);
+				if(req.url === "") {
+					req.url = "/";
+				}
 			}
 			listener(req, res, next);
 		} else {

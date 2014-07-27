@@ -24,9 +24,11 @@ describe("achilles.Router.addFormatter", function() {
 	});
 });
 
+var server;
+
 describe("achilles.Router.route", function() {
 	before(function(done) {
-		http.createServer(router.route).listen(5000, done);
+		server = http.createServer(router.route).listen(5000, done);
 	});
 
 	it("should set res.redirect", function(done) {
@@ -37,5 +39,42 @@ describe("achilles.Router.route", function() {
 			assert(res.statusCode === 302);
 			done();
 		});
+	});
+	
+	after(function(done) {
+		server.close(done);
+	});
+});
+
+describe("achilles.Router.use", function() {
+	before(function(done) {
+		var router = new achilles.Router();
+		var subrouter = new achilles.Router();
+		router.use("/sub", subrouter);
+		subrouter.get("/", function(req, res) {
+			res.end("index");
+		});
+		subrouter.get("/hi", function(req, res) {
+			res.end("hi");
+		});
+		server = http.createServer(router.route).listen(5000, done);
+	});
+
+	it("should work with subrouters", function(done) {
+		request.get("http://localhost:5000/sub/hi", function(err, res, body) {
+			assert(body === "hi");
+			done();
+		});
+	});
+
+	it("should be able to route to the / of a subrouter", function(done) {
+		request.get("http://localhost:5000/sub", function(err, res, body) {
+			assert(body === "index");
+			done();
+		});
+	});
+
+	after(function(done) {
+		server.close(done);
 	});
 });
