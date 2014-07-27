@@ -506,7 +506,7 @@ achilles.Model.getById = function(options, cb) {
 	return nova.refresh(cb);
 };
 
-achilles.Model.removeById = function(options, cb) {
+achilles.Model.delById = function(options, cb) {
 	var _id = options._id || options;
 	var nova = new this();
 	nova._id = _id;
@@ -592,7 +592,7 @@ achilles.Service = function(model) {
 			nova.save().pipe(res);
 		});
 		this.del("/:_id", function(req, res) {
-			model.removeById(req.params).pipe(res);
+			model.delById(req.params).pipe(res);
 		});
 		var subdocs = model.getSubDocsTree();
 		for(var key in subdocs) {
