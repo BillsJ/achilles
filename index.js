@@ -444,6 +444,7 @@ achilles.Router.prototype.view = function(url, view) {
 achilles.Model = function() {
 	achilles.Object.call(this);
 	this.define("_id", String);
+	this._refs = {};
 };
 
 util.inherits(achilles.Model, achilles.Object);
@@ -475,11 +476,9 @@ achilles.Model.prototype.save = function(cb) {
 	 */
 };
 
-/*
- * TODO: Add Fault tolerance to achilles.Model
- */
 achilles.Model.prototype.ref = function(property, model) {
 	this.define(property, String);
+	this._refs
 };
 
 achilles.Model.prototype.refresh = function(cb) {
@@ -530,6 +529,15 @@ achilles.Model.find = function(limit, cb) {
 	return request.get({url: url.format(URL), json:true}, cb && function(err, res, body) {
 		cb(err, body);
 	});
+};
+
+achilles.Model.getRefDocTree = function() {
+	var n = new this();
+	var tree = {};
+	for(var key in n._refs) {
+		tree[key] = n._refs[key];
+	}
+	return tree;
 };
 
 achilles.Model.getSubDocsTree = function() {
