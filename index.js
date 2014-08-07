@@ -478,7 +478,7 @@ achilles.Model.prototype.save = function(cb) {
 
 achilles.Model.prototype.ref = function(property, model) {
 	this.define(property, String);
-	this._refs
+	this._refs[property] = model;
 };
 
 achilles.Model.prototype.refresh = function(cb) {
