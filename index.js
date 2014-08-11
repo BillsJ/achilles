@@ -428,7 +428,10 @@ achilles.Router.prototype.route = function(req, res, cb) {
 achilles.Router.prototype.view = function(url, view) {
 	this.get(url, function(req, res, cb) {
 		if(req.accepts.types("html")) {
-			res.end(view());
+			res.end(view({
+				params: req.params,
+				query: req.query
+			}));
 		} else {
 			cb();
 		}
