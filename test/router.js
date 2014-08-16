@@ -50,14 +50,14 @@ describe("achilles.Router.use", function() {
 	before(function(done) {
 		var router = new achilles.Router();
 		var subrouter = new achilles.Router();
-		router.use("/sub", subrouter);
 		subrouter.get("/", function(req, res) {
 			res.end("index");
 		});
 		subrouter.get("/hi", function(req, res) {
 			res.end("hi");
 		});
-		server = http.createServer(router.route).listen(5000, done);
+		router.use("/sub", subrouter.server());
+		server = http.createServer(router.server()).listen(5000, done);
 	});
 
 	it("should work with subrouters", function(done) {
@@ -75,6 +75,8 @@ describe("achilles.Router.use", function() {
 	});
 
 	after(function(done) {
-		server.close(done);
+		server.close(function(err) {
+			done(err);
+		});
 	});
 });
