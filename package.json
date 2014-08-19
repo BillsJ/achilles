@@ -25,7 +25,8 @@
     "accepts": "~1.0.7",
     "response-redirect": "0.0.1",
     "simple-router": "~0.3.0",
-    "cookies-js": "~0.4.0"
+    "cookies-js": "~0.4.0",
+    "connect-flash": "~0.1.1"
   },
   "devDependencies": {
     "browserify": "~4.1.8",
