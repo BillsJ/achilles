@@ -24,23 +24,67 @@ describe("achilles.Router.addFormatter", function() {
 	});
 });
 
-var server;
+var router, server;
 
-describe("achilles.Router.route", function() {
+describe("achilles.Router.addAuthenticator", function() {
 	before(function(done) {
-		server = http.createServer(router.route).listen(5000, done);
+		var BasicStrategy = require("passport-http").BasicStrategy;
+		router = new achilles.Router();
+		router.addAuthenticator(new BasicStrategy(function(username, password, cb) {
+			cb("Username or Password is invalid");
+		}));
+		router.use(router.authenticate("http"));
+		server = http.createServer(router.server()).listen(5000, done);
 	});
 
-	it("should set res.redirect", function(done) {
+	it("should store authenticators in this.authenticators", function() {
+		assert(router.authenticators.basic !== undefined);
+	});
+
+	after(function(done) {
+		server.close(done);
+	});
+});
+
+describe("achilles.Router", function() {
+	before(function(done) {
+		router = new achilles.Router({silent:true});
+		server = http.createServer(router.server()).listen(5000, done);
+
 		router.get("/", function(req, res) {
 			res.redirect("/login");
 		});
+
+		router.get("/accepts", function(req, res) {
+			assert(req.accepts !== undefined);
+			res.end();
+		});
+
+		router.get("/errorhead", function(req, res) {
+			throw new Error();
+		});
+	});
+
+	it("should set res.redirect", function(done) {
 		request.get({url: "http://localhost:5000/", followRedirect:false}, function(err, res, body) {
 			assert(res.statusCode === 302);
 			done();
 		});
 	});
+
+	it("should set req.accepts", function(done) {
+		request.get({url: "http://localhost:5000/accepts", followRedirect:false}, function(err, res, body) {
+			done();
+		});
+	});
 	
+	it("should not crash; when an error is thrown", function(done) {
+		request.get({url: "http://localhost:5000/errorhead", followRedirect:false}, function(err, res, body) {
+			assert(res.statusCode === 500);
+			done();
+		});
+	});
+
 	after(function(done) {
 		server.close(done);
 	});

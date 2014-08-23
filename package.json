@@ -1,6 +1,6 @@
 {
   "name": "achilles",
-  "version": "0.18.1",
+  "version": "0.18.2",
   "description": "Lightweight framework for structured web applications",
   "repository": "https://github.com/HashanP/achilles",
   "main": "index.js",
@@ -42,6 +42,8 @@
     "json2csv-stream": "~0.1.2",
     "ogg": "~1.1.1",
     "vorbis": "~0.1.0",
-    "lame": "~1.1.0"
+    "lame": "~1.1.0",
+    "passport-local": "~1.0.0",
+    "passport-http": "~0.2.2"
   }
 }
