@@ -10,8 +10,9 @@ describe("achilles.User", function() {
 	});
 	it("should work correctly with roles", function() {
 		var m = new achilles.User();
-		m.roles = ["Album:get"];
-		assert(m.can(Album, "get"));
+		m.roles = ["Post:get"]; 
+		// This user does not have permission to get albums
+		assert(m.can(Album, "get") === false);
 	});
 	it("should work correctly with groups", function() {
 		new achilles.Group("student", {
@@ -22,5 +23,14 @@ describe("achilles.User", function() {
 		var m = new achilles.User();
 		m.groups = ["student"];
 		assert(m.can(Album, "get"));
+	});	
+});
+
+describe("achilles.Group", function() {
+	it("should disallow two groups with the same name", function() {
+		assert.throws(function() {
+			new achilles.Group("main man");
+			new achilles.Group("main man");
+		});
 	});
 });

@@ -85,6 +85,13 @@ describe("achilles.Router", function() {
 		});
 	});
 
+	it("should send a 404; when url is not found", function(done) {
+		request.get("http://localhost:5000/404", function(err, res, body) {
+			assert(res.statusCode === 404);
+			done();
+		});
+	});
+
 	after(function(done) {
 		server.close(done);
 	});
