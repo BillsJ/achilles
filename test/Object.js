@@ -15,7 +15,9 @@ describe("achilles.Object.parse", function() {
 describe("achilles.Object.prototype.define", function() {
     it("should set this._type[key] to appropriate type", function() {
 		var album = new Album("Femme Fatale");
+		album.popular = true;
 		assert(album._type.title === String);
+		assert(album.popular === true);
     });
 
 	it("should support type casting from String to Number", function() {
@@ -40,6 +42,12 @@ describe("achilles.Object.prototype.define", function() {
 		var album = new Album();
 		album.title = 0;
 		assert(album.title === "0");
+	});
+	it("should automatically cast values to arrays where needed", function() {
+		var song = new Song("Cal Me Maybe");
+		var album = new Album();
+		album.songs = song;
+		assert(typeof album.songs === "array");
 	});
 });
 

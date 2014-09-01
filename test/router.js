@@ -63,6 +63,11 @@ describe("achilles.Router", function() {
 		router.get("/errorhead", function(req, res) {
 			throw new Error();
 		});
+		
+		router.view("/view", function(options) {
+			assert(options.query.all === "true");
+			return "Hello World!";
+		});
 	});
 
 	it("should set res.redirect", function(done) {
@@ -88,6 +93,13 @@ describe("achilles.Router", function() {
 	it("should send a 404; when url is not found", function(done) {
 		request.get("http://localhost:5000/404", function(err, res, body) {
 			assert(res.statusCode === 404);
+			done();
+		});
+	});
+
+	it(".view()", function(done) {
+		request.get("http://localhost:5000/view?all=true", function(err, res, body) {
+			assert(body === "Hello World!");
 			done();
 		});
 	});

@@ -2,6 +2,8 @@ var achilles = require("../index.js");
 var util = require("util");
 var Song = require("./Song");
 
+achilles.User.idAttribute = "id";
+
 function Album(name) {
 	achilles.Model.call(this);
 
@@ -9,6 +11,8 @@ function Album(name) {
 	this.define("rating", Number);
 	this.define("virtual_property", Number, {virtual:true});
 	this.define("songs", [Song]);
+	this.define("popular", Boolean);
+	this.ref("userId", achilles.User);
 
 	this.name = name;
 }

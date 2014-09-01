@@ -16,6 +16,15 @@ describe("achilles.Model", function() {
 			done();
 		});
 	});
+	it(".save()", function(done) {
+		var album = new Album("For The Win");
+		album.save(function(err, album) {
+			if(err) {
+				throw err;
+			} 
+			done();
+		});
+	});
 	it("delById()", function(done) {
 		Album.delById("1", function(err, body) {
 			if(err) {
@@ -24,9 +33,20 @@ describe("achilles.Model", function() {
 			done();
 		});
 	});
+	it("getRefDocTree()", function() {
+		var tree = Album.getRefDocTree();
+		assert(Object.keys(tree).length === 1);
+		assert(tree.userId === achilles.User);
+	});
 	it("getSubDocTree()", function() {
 		var tree = Album.getSubDocTree();
 		assert(tree["songs"] === Song);
 		assert(Object.keys(tree).length === 1);
+	});
+	it("get()", function(done) {
+		Album.get(function(err, list) {
+			assert(list.length === 100);
+			done();
+		});
 	});
 });
