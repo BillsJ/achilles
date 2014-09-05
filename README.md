@@ -68,23 +68,23 @@ The method *define* accepts two parameters: first a property name, and second a 
 
 ##### Defining properties as arrays
 To define properties as arrays of a type, put the type in an array, e.g.:
+
 ```js
 this.define("favouriteColours", [String]); // An array of Strings
 this.define("favouriteNumbers", [Number]); // An array of Numbers
 this.define("children", [Person]); // An array of People
 ```
 
-#### Instantiating classes
 To instantiate a class, do:
 ```js
 var George = new Person("George");
 ```
 
-#### Getting & setting properties
 To get a property, do:
 ```js
-console.log(George.name);
+George.age;
 ```
+
 To set a  property, do:
 ```js
 George.age = 13;
