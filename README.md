@@ -29,7 +29,8 @@ The internet is populated with so many client-side frameworks from Backbone.js t
 ### achilles.Object
 
 #### Example
-Inheriting from *events.EventEmitter*, *achilles.Object* provides an object-orientated structure for classes:
+Inheriting from *events.EventEmitter*, *achilles.Object* provides an object-orientated structure for classes. To create a class called `Person` with properties such as `name`, `height`, `dateOfBirth`, `alive` and `children`, as well as methods such as `reset()`:
+
 ```js
 var util = require("util");
 
@@ -50,16 +51,6 @@ Person.prototype.reset = function() {
     this.alive = true;
 };
 
-```
-
-#### Creating classes
-To create a class, use the standard practice of declaring classes as functions:
-```js
-function MyClass() {
-    // Constructor
-}
-
-util.inherits(MyClass, achilles.Object); 
 ```
 
 The last part makes *MyClass* inherit all of *achilles.Object*'s methods, which are used in the following sections to declare properties.
