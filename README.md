@@ -1,4 +1,4 @@
-achilles [![NPM Module](http://img.shields.io/npm/v/achilles.svg?style=flat-square)](https://npmjs.org/package/achilles) [![NPM Module](http://img.shields.io/HashanP/travis/achilles.svg?style=flat-square)](https://travis-ci.org/HashanP/achilles)
+achilles [![NPM Module](http://img.shields.io/npm/v/achilles.svg?style=flat-square)](https://npmjs.org/package/achilles) [![NPM Module](http://img.shields.io/travis/HashanP/achilles.svg?style=flat-square)](https://travis-ci.org/HashanP/achilles)
 ========
 
 A lightweight framework for structured web applications. N.B: This is still a work in progress; help would greatly be appreciated, as would any ideas.
