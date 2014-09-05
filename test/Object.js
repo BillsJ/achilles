@@ -47,7 +47,7 @@ describe("achilles.Object.prototype.define", function() {
 		var song = new Song("Cal Me Maybe");
 		var album = new Album();
 		album.songs = song;
-		assert(typeof album.songs === "array");
+		assert(album.songs instanceof Array);
 	});
 });
 

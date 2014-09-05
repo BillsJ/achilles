@@ -41,12 +41,21 @@ describe("achilles.Model", function() {
 	it("getSubDocTree()", function() {
 		var tree = Album.getSubDocTree();
 		assert(tree["songs"] === Song);
-		assert(Object.keys(tree).length === 1);
+		assert(Object.keys(tree).length === 2);
 	});
 	it("get()", function(done) {
 		Album.get(function(err, list) {
 			assert(list.length === 100);
 			done();
+		});
+	});
+	it("getURL()", function(cb) {
+		Album.getById("1", function(err, album) {
+			var song = new Song("Counting Stars");
+			album.songs = [song];
+			console.log(album.getURL());
+			assert(song.getURL() === album.getURL() + "/songs");
+			cb();
 		});
 	});
 });

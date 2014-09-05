@@ -3,18 +3,23 @@ var assert = require("assert");
 var http = require("http");
 var request = require("request");
 var Album = require("./Album");
+var bodyParser = require("body-parser");
+var nock = require("nock");
 
 var service = new achilles.Service(Album);
+service.use(bodyParser.json());
+var server;
 
 describe("achilles.Service", function() {
 	before(function(cb) {
-		http.createServer(service.server()).listen(5000, cb);
+		server = http.createServer(service.server()).listen(5000, cb);
 	});
 	it("should work with /", function(done) {
 		request.get({url:"http://localhost:5000/", json:true}, function(err, res, body) {
 			if(err) {
 				throw err;
 			}
+			assert(typeof body[0] === "object");
 			assert(body.length === 100);
 			done();
 		});
@@ -25,5 +30,98 @@ describe("achilles.Service", function() {
 			assert(body.title === "quidem molestiae enim");
 			done();
 		});
+	});
+	it("should support document creation", function(cb) {
+		request.post({url:"http://localhost:5000/", json:{title:"Because we're worth it"}}, function(err, res, body) {
+			if(err) {
+				throw err;
+			}
+			assert(typeof body.id === "number");
+			cb();
+		});
+	});
+	it("should support document updates", function(cb) {
+		request.put({url:"http://localhost:5000/1", json:{title:"Because we're worth it"}}, function(err, res, body) {
+			if(err) {
+				throw err;
+			}
+			assert(res.statusCode === 204);
+			cb();
+		});
+	});
+	it("should support document deletion", function(cb) {
+		request.del("http://localhost:5000/1", function(err, res, body) {
+			assert(res.statusCode === 204);
+			cb();
+		});
+	});
+	it("should work with nested resources", function(cb) {
+		request.get({url:"http://localhost:5000/1/photos", json:true}, function(err, res, body) {
+			assert(body.length === 50);
+			cb();
+		});
+	});
+	it("should work with getting nested resources", function(cb) {
+		nock('http://jsonplaceholder.typicode.com')
+			.get('/albums/1/photos/1')
+			.reply(200, {
+				"albumId": 1,
+				"id": 1,
+				"title": "accusamus beatae ad facilis cum similique qui sunt",
+				"url": "http://placehold.it/600/92c952",
+				"thumbnailUrl": "http://placehold.it/150/30ac17"
+			})
+			.post('/albums/1/photos', {})
+			.reply(201, {
+				"id":"51"
+			});
+		request.get({url:"http://localhost:5000/1/photos/1", json:true}, function(err, res, body) {
+			assert(body.title === "accusamus beatae ad facilis cum similique qui sunt");
+			cb();
+		});
+	});
+	it("should work with creating nested resources", function(cb) {
+		request.post({url:"http://localhost:5000/1/photos", json:{title:"Hi"}}, function(err, res, body) {
+			console.log(body);
+			assert(res.statusCode === 201);
+			assert(body.id === "51");
+			cb();
+		});
+	});
+	after(function(cb) {
+		server.close(cb);
+	});
+});
+
+describe("achilles.Service (Permissions System)", function() {
+	before(function(cb) {
+		nock.restore();
+		service = new achilles.Service(Album);
+
+		service.get("/", function(req, res, next) {
+			req.user = new achilles.User();
+			req.user.roles = ["Album:get:5", "Album:get:6"];
+			next();
+		});
+
+		server = http.createServer(service.server()).listen(5000, cb);
+	});
+	it("should only return records permission has been granted to see", function(cb) {
+		request.get({url:"http://localhost:5000/", json:true}, function(err, res, body) {
+			if(err) {
+				throw err;
+			}
+			assert(body.length === 2);
+			cb();
+		});
+	});
+	it("should deny those that don't have permission", function(cb) {
+		request.get({url:"http://localhost:5000/1/photos", json:true}, function(err, res, body) {
+			assert(res.statusCode === 401);
+			cb();
+		});
+	});
+	after(function(cb) {
+		server.close(cb);
 	});
 });

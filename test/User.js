@@ -10,7 +10,7 @@ describe("achilles.User", function() {
 	});
 	it("should work correctly with roles", function() {
 		var m = new achilles.User();
-		m.roles = ["Post:get"]; 
+		m.roles = ["Post:get"];
 		// This user does not have permission to get albums
 		assert(m.can(Album, "get") === false);
 	});
@@ -23,7 +23,12 @@ describe("achilles.User", function() {
 		var m = new achilles.User();
 		m.groups = ["student"];
 		assert(m.can(Album, "get"));
-	});	
+	});
+	it("getAllAccessible()", function() {
+		var m = new achilles.User();
+		m.roles = ["Album:get:5", "Album:get:6"];
+		assert(m.getAllAccessible(Album, "get").length === 2);
+	});
 });
 
 describe("achilles.Group", function() {
