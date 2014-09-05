@@ -1,4 +1,4 @@
-achilles
+achilles [![NPM Module](http://img.shields.io/npm/v/achilles.svg?style=flat-square)](https://npmjs.org/package/achilles)
 ========
 
 A lightweight framework for structured web applications. N.B: This is still a work in progress; help would greatly be appreciated, as would any ideas.
@@ -29,7 +29,8 @@ The internet is populated with so many client-side frameworks from Backbone.js t
 ### achilles.Object
 
 #### Example
-Inheriting from *events.EventEmitter*, *achilles.Object* provides an object-orientated structure for classes:
+Inheriting from *events.EventEmitter*, *achilles.Object* provides an object-orientated structure for classes. To create a class called `Person` with properties such as `name`, `height`, `dateOfBirth`, `alive` and `children`, as well as methods such as `reset()`:
+
 ```js
 var util = require("util");
 
@@ -52,16 +53,6 @@ Person.prototype.reset = function() {
 
 ```
 
-#### Creating classes
-To create a class, use the standard practice of declaring classes as functions:
-```js
-function MyClass() {
-    // Constructor
-}
-
-util.inherits(MyClass, achilles.Object); 
-```
-
 The last part makes *MyClass* inherit all of *achilles.Object*'s methods, which are used in the following sections to declare properties.
 
 #### Defining properties
@@ -77,23 +68,23 @@ The method *define* accepts two parameters: first a property name, and second a 
 
 ##### Defining properties as arrays
 To define properties as arrays of a type, put the type in an array, e.g.:
+
 ```js
 this.define("favouriteColours", [String]); // An array of Strings
 this.define("favouriteNumbers", [Number]); // An array of Numbers
 this.define("children", [Person]); // An array of People
 ```
 
-#### Instantiating classes
 To instantiate a class, do:
 ```js
 var George = new Person("George");
 ```
 
-#### Getting & setting properties
 To get a property, do:
 ```js
-console.log(George.name);
+George.age;
 ```
+
 To set a  property, do:
 ```js
 George.age = 13;
