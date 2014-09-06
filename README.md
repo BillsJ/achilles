@@ -1,4 +1,4 @@
-achilles [![NPM Module](http://img.shields.io/npm/v/achilles.svg?style=flat-square)](https://npmjs.org/package/achilles)
+achilles [![NPM Module](http://img.shields.io/npm/v/achilles.svg?style=flat-square)](https://npmjs.org/package/achilles) [![NPM Module](http://img.shields.io/travis/HashanP/achilles.svg?style=flat-square)](https://travis-ci.org/HashanP/achilles)
 ========
 
 A lightweight framework for structured web applications. N.B: This is still a work in progress; help would greatly be appreciated, as would any ideas.
@@ -92,12 +92,12 @@ George.age = 13;
 
 A TypeError will be raised if a property is set to a value that does not match the type.
 
-### achilles.EventEmitter
+### achilles.View
 #### Example
-*achilles.EventEmitter* inherits from *achilles.Object*, and provides a beautifully-designed jQuery-less interface to listen to DOM events. Not only that, *achilles.EventEmitter* is a sturdy foundation on to of which other *achilles* classes are created.
+*achilles.View* inherits from *achilles.Object*, and provides a beautifully-designed jQuery-less interface to listen to DOM events. Not only that, *achilles.View* is a sturdy foundation on to of which other *achilles* classes are created.
 
 ```js
-var MyApp = new achilles.EventEmitter("main"); // Registers events on the <main> element
+var MyApp = new achilles.View("main"); // Registers events on the <main> element
 
 MyApp.on("click button.submit", function(e) {
     // A button with the class `submit`, inside `<main>`, was clicked
@@ -118,11 +118,11 @@ $(document).ready(function() {
 Because of *achilles*'s event-driven architecture, that is not the case here.
 
 #### Instantiating
-To create an *achilles.EventEmitter*, pass a CSS selector into its constructor, e.g:
+To create an *achilles.View*, pass a CSS selector into its constructor, e.g:
 ```js
-var MyApp = new achilles.EventEmitter("#container");
+var MyApp = new achilles.View("#container");
 ```
-Here *achilles.EventEmitter* is assigned to the event with the id *container*.
+Here *achilles.View* is assigned to the event with the id *container*.
 
 #### Events
 To declare an events, on the `#container` element, use the *on* method:
@@ -140,4 +140,3 @@ MyApp.on("click button.reload", function(e) {
 
 });
 ```
-Here *MyApp* listens for a *click* event on any buttons, with the class `reload`, inside the `#container` element.
