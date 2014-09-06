@@ -96,7 +96,7 @@ describe("achilles.Service", function() {
 describe("achilles.Service (Permissions System)", function() {
 	before(function(cb) {
 		nock.restore();
-		service = new achilles.Service(Album);
+		service = new achilles.Service(Album, {silent:true});
 
 		service.use(function(req, res, next) {
 			req.user = new achilles.User();
@@ -115,9 +115,15 @@ describe("achilles.Service (Permissions System)", function() {
 			cb();
 		});
 	});
-	it("should deny those that don't have permission", function(cb) {
+	it("should deny those that don't have permission to get", function(cb) {
 		request.get({url:"http://localhost:5000/1/photos", json:true}, function(err, res, body) {
 			assert(body.length === 0);
+			cb();
+		});
+	});
+	it("should deny those that don't have permission to del", function(cb) {
+		request.del({url:"http://localhost:5000/1/photos/1", json:true}, function(err, res, body) {
+			assert(res.statusCode === 401);
 			cb();
 		});
 	});

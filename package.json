@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "istanbul cover ./node_modules/mocha/bin/mocha"
+    "test": "istanbul cover --hook-run-in-context ./node_modules/mocha/bin/mocha"
   },
   "keywords": [
     "controller",
