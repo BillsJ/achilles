@@ -10,3 +10,9 @@ after_script:
 notifications:
   slack:
     secure: EYsDK6x/ez0y8R1VhrA1qA5sMK5sgeokt4LY41t5jbgEGCt+8KYXDWqj9xcqrhvwIYXG6iUiNavTTT7jBHb2QxOeH6HyMtIEq3GOBxRNZ5beDJXK1HzYRCTruvik3Ogxg5Nwye2rf6BxCOeu9d7z12IjOSTt2rZMtUukYNDpBhk=
+deploy:
+  provider: npm
+  email: "hashan.punchihewa@gmail.com"
+  api_key: "x28n90Y4CrvfNcgJhXmtBgTIEFJxHHuUTkyef0nKXxJPL+gcwDpxrnCB3vHWIjcrRYQvfAqXSJ4Kh/2zj/dlE74UdVoiEDYbtBbNw2qU/duRQRMnabLZK9UGhdBskyvk30bMMckJlUdzJGMTKJtDS3HVJFYU51k9gu/gvS7CDeE="
+  on:
+    tags: true

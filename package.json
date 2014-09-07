@@ -2,7 +2,7 @@
   "name": "achilles",
   "version": "0.18.5",
   "description": "Lightweight framework for structured web applications",
-  "repository": "https://github.com/HashanP/achilles",
+  "repository": "https://github.com/TheMuses/achilles",
   "main": "index.js",
   "browser": "browser.js",
   "directories": {
