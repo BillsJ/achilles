@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "istanbul cover _mocha"
+    "test": "[ \"$OSTYPE\" == \"win32\" ] && istanbul cover node_modules/mocha/bin/_mocha || istanbul cover _mocha"
   },
   "keywords": [
     "controller",
