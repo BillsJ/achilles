@@ -6,7 +6,7 @@ addons:
   code_climate:
     repo_token: 37368877390b56df3dc3ee9f44c325490bfa4124d3f3b4128ef2593869145a86
 after_script:
-  - cat coverage/lcov.info | codeclimate
+  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && cat coverage/lcov.info | codeclimate'
 notifications:
   slack:
     secure: EYsDK6x/ez0y8R1VhrA1qA5sMK5sgeokt4LY41t5jbgEGCt+8KYXDWqj9xcqrhvwIYXG6iUiNavTTT7jBHb2QxOeH6HyMtIEq3GOBxRNZ5beDJXK1HzYRCTruvik3Ogxg5Nwye2rf6BxCOeu9d7z12IjOSTt2rZMtUukYNDpBhk=
