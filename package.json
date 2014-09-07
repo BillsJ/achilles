@@ -1,6 +1,6 @@
 {
   "name": "achilles",
-  "version": "0.18.5",
+  "version": "0.18.6",
   "description": "Lightweight framework for structured web applications",
   "repository": "https://github.com/TheMuses/achilles",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "istanbul cover _mocha"
+    "test": "[ \"$OSTYPE\" == \"win32\" ] && istanbul cover node_modules/mocha/bin/_mocha || istanbul cover _mocha"
   },
   "keywords": [
     "controller",

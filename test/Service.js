@@ -36,7 +36,7 @@ describe("achilles.Service", function() {
 			if(err) {
 				throw err;
 			}
-			assert(typeof body.id === "number");
+			assert(body.id !== undefined);
 			cb();
 		});
 	});

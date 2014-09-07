@@ -10,6 +10,10 @@ describe("achilles.Model.ref", function() {
 });
 
 describe("achilles.Model", function() {
+	it("should have an id attribute", function() {
+		var album = new Album();
+		assert(album._type.id === String);
+	});
 	it("getById()", function(done) {
 		Album.getById("1", function(err, album) {
 			assert(album.title === "quidem molestiae enim");
