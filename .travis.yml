@@ -1,7 +1,7 @@
 language: node_js
 node_js:
 - '0.10'
-before_install: npm install -g istanbul
+before_install: npm install -g istanbul codeclimate-test-reporter
 addons:
   code_climate:
     repo_token: 37368877390b56df3dc3ee9f44c325490bfa4124d3f3b4128ef2593869145a86
