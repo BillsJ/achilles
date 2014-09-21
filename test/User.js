@@ -14,28 +14,4 @@ describe("achilles.User", function() {
 		// This user does not have permission to get albums
 		assert(m.can(Album, "get") === false);
 	});
-	it("should work correctly with groups", function() {
-		new achilles.Group("student", {
-			Album: {
-				get:true
-			}
-		});
-		var m = new achilles.User();
-		m.groups = ["student"];
-		assert(m.can(Album, "get"));
-	});
-	it("getAllAccessible()", function() {
-		var m = new achilles.User();
-		m.roles = ["Album:get:5", "Album:get:6"];
-		assert(m.getAllAccessible(Album, "get").length === 2);
-	});
-});
-
-describe("achilles.Group", function() {
-	it("should disallow two groups with the same name", function() {
-		assert.throws(function() {
-			new achilles.Group("main man");
-			new achilles.Group("main man");
-		});
-	});
 });
