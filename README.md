@@ -1,7 +1,7 @@
 achilles [![NPM Module](http://img.shields.io/npm/v/achilles.svg?style=flat-square)](https://npmjs.org/package/achilles) [![NPM Module](http://img.shields.io/travis/TheMuses/achilles.svg?style=flat-square)](https://travis-ci.org/TheMuses/achilles) [![Code Climate](http://img.shields.io/codeclimate/github/TheMuses/achilles.svg?style=flat-square)](https://codeclimate.com/github/TheMuses/achilles)
 ========
 
-A lightweight framework for structured web applications. N.B: This is still a work in progress; help would greatly be appreciated, as would any ideas.
+A lightweight framework for structured web applications.
 
 ### Install
 ```bash
