@@ -8,11 +8,7 @@ A lightweight framework for structured web applications.
 npm install achilles --save
 ```
 
-### Usage: Browserify
-achilles is designed to work seamlessly with achilles, simply do:
-```js
-var achilles = require("achilles");
-```
+Works serverside and with browserify.
 
 ### Why yet another framework?
 The internet is populated with so many client-side frameworks from Backbone.js to Angular.js to React.js to Ractive.js to Vue.js. Why yet another framework? achilles was born from the need to:
