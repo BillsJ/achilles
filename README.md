@@ -48,14 +48,14 @@ npm install achilles --save
 Works serverside and with browserify.
 
 ### Why yet another framework?
-The internet is populated with so many client-side frameworks from Backbone.js to Angular.js to React.js to Ractive.js to Vue.js. Why yet another framework? achilles was born from the need to:
+Why yet another framework? Achilles was born from the need to:
 - Have a lightweight framework, that could work with **all** templating languages including asyncronous templates, and d3 graphs
 - Have an API which was consistent with Node.js, for instance: `template` and `templateSync`; the of an Node's EventEmitter as the base for `achilles.Object`
-- The choice of Node's `util.inherits` method over the horrific `.extend` pattern seen in many other frameowrks
-- The necessity for a strong-typed object system, that was based `util.inherits`
-- The seperation of presentation and content (i.e. the seperation of HTML, CSS, JS), which is a principle Angular.js et al. so keenly violate
-- Consistent naming structure: classes should be capitalised; everything else including nampespaces should not. An example of this is Node's `events` module.
-- No need for boilerplate `window.addEventListener("load"...` or `$(document).ready()` code, thanks to an event-driven architecture
+- The choice of Node's `util.inherits` method over `.extend()` 
+- Strong-typed object system
+- The seperation of presentation and content (i.e. the seperation of HTML, CSS, JS) (unlike Angular.js)
+- Consistent naming structure: classes should be capitalised; everything else including nampespaces should not.
+- No need for boilerplate `window.onload` or `$(document).ready()` code
 
 ## API
 
