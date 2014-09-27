@@ -19,11 +19,11 @@ function Book() {
     this.define("readership", [String]);
 }
 
+util.inherits(Book, achilles.Model);
+
 Book.prototype.getTotalReaders = function() {
     return this.readership.length;
 };
-
-util.inherits(Book, achilles.Model);
 
 Book.connection = new mongodb.Connection("mongodb://127.0.0.1:27017/test");
 
@@ -88,8 +88,6 @@ Person.prototype.reset = function() {
 
 ```
 
-The last part makes *MyClass* inherit all of *achilles.Object*'s methods, which are used in the following sections to declare properties.
-
 #### Defining properties
 ```js
     this.define("name", String);
@@ -134,7 +132,7 @@ MyApp.on("click", function(e) {
 });
 ```
 
-#### Putting Events on Child Element
+To put an event on a child element:
 ```js
 MyApp.on("click button.reload", function(e) {
     // Code here
