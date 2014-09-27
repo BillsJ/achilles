@@ -138,5 +138,3 @@ MyApp.on("click button.reload", function(e) {
     // Code here
 });
 ```
-
-N.B.: This uses event delegation.
