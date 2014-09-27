@@ -119,7 +119,7 @@ Other adapaters include a [MongoDB adapter](https://github.com/TheMuses/achilles
 #### getById()
 A static method that takes an id and a callback.
 
-### delById()
+#### delById()
 A static method that takes an id of an object to delete and a callback.
 
 #### save()
@@ -128,7 +128,7 @@ Saves the object to the database; it accepts a callback that is called after the
 #### refresh()
 Refreshes its conents.
 
-### del()
+#### del()
 Deletes the object.
 
 ### achilles.View
