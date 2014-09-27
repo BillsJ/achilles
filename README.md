@@ -21,7 +21,7 @@ function Book() {
 
 util.inherits(Book, achilles.Model);
 
-Book.prototype.getTotalReaders = function() {
+Book.prototype.getReaderCount = function() {
     return this.readership.length;
 };
 
@@ -45,7 +45,7 @@ Book.getById("DUMMY_ID", function(err, book) {
 npm install achilles --save
 ```
 
-Works serverside and with browserify.
+N.B.: Works server-side and client-side (with browserify)
 
 ### Why yet another framework?
 Why yet another framework? Achilles was born from the need to:
@@ -93,9 +93,9 @@ Person.prototype.reset = function() {
     this.define("name", String);
 ```
 
-The method *define* accepts two parameters: first a property name, and second a type. 
+The method *define* accepts two parameters: first a property name, and second a class. 
 
-To define properties as arrays of a type, put the type in an array, e.g.:
+To define properties as arrays of a class, put the class in an array, e.g.:
 
 ```js
 this.define("favouriteColours", [String]); // An array of Strings
