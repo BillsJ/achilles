@@ -68,6 +68,8 @@ To create a class called `Person` with properties such as `name`, `height`, `dat
 var util = require("util");
 
 function Person(name) {
+    achilles.Object.call(this);
+
     this.define("name", String);
     this.define("height", Number);
     this.define("dataOfBirth", Date);
@@ -89,17 +91,12 @@ Person.prototype.reset = function() {
 The last part makes *MyClass* inherit all of *achilles.Object*'s methods, which are used in the following sections to declare properties.
 
 #### Defining properties
-Inside the construcutor use the *define* method, which is inherited from *achilles.Object* to declare properties:
 ```js
-function Person(name) {
     this.define("name", String);
-    this.name = name;
-}
 ```
 
 The method *define* accepts two parameters: first a property name, and second a type. 
 
-##### Defining properties as arrays
 To define properties as arrays of a type, put the type in an array, e.g.:
 
 ```js
