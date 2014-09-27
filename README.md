@@ -133,10 +133,9 @@ The constructor accepts either a CSS selector or an element or nothing.
 To declare an events, on the `#container` element, use the *on* method:
 ```js
 MyApp.on("click", function(e) {
-
+    // `e` provides information about the event
 });
 ```
-The first parameter of *on* method is an event name, and the second is a function, that itself takes an Event argument. The Event argumenet isn't strictly necessary, but it provides information about the event.
 
 #### Putting Events on Child Element
 You will rarely only need to put events on the root element, in this case `#container`. To declare event handlers for children of the root element:
