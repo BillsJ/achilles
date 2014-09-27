@@ -59,10 +59,9 @@ The internet is populated with so many client-side frameworks from Backbone.js t
 
 ## API
 
-### achilles.Object
+### achilles.Object (inherits events.EventEmitter)
 
-#### Example
-Inheriting from *events.EventEmitter*, *achilles.Object* provides an object-orientated structure for classes. To create a class called `Person` with properties such as `name`, `height`, `dateOfBirth`, `alive` and `children`, as well as methods such as `reset()`:
+To create a class called `Person` with properties such as `name`, `height`, `dateOfBirth`, `alive` and `children`, as well as methods such as `reset()`:
 
 ```js
 var util = require("util");
@@ -125,9 +124,7 @@ George.age = 13;
 
 A TypeError will be raised if a property is set to a value that does not match the type.
 
-### achilles.View
-#### Example
-*achilles.View* inherits from *achilles.Object*, and provides a beautifully-designed jQuery-less interface to listen to DOM events. Not only that, *achilles.View* is a sturdy foundation on to of which other *achilles* classes are created.
+### achilles.View (inherits achilles.Object)
 
 ```js
 var MyApp = new achilles.View("main"); // Registers events on the <main> element
