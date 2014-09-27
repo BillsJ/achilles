@@ -117,7 +117,7 @@ A TypeError will be raised if a property is set to a value that does not match t
 var MyApp = new achilles.View("#container"); // Registers events on the <main> element
 
 MyApp.on("click button.submit", function(e) {
-    // A button with the class `submit`, inside `<main>`, was clicked
+    // A button with the class `submit`, inside `#container` element, was clicked
 });
 
 Main.on("click", function(e) {
@@ -125,7 +125,7 @@ Main.on("click", function(e) {
 });
 ```
 
-N.B. There is no need for boilerplate code such as `window.onload` or `$.ready()`.
+N.B.: There is no need for boilerplate code such as `window.onload` or `$.ready()`.
 
 The constructor accepts either a CSS selector or an element or nothing.
 
@@ -138,11 +138,10 @@ MyApp.on("click", function(e) {
 ```
 
 #### Putting Events on Child Element
-You will rarely only need to put events on the root element, in this case `#container`. To declare event handlers for children of the root element:
 ```js
 MyApp.on("click button.reload", function(e) {
-
+    // Code here
 });
 ```
 
-N.B. This uses event delegation.
+N.B.: This uses event delegation.
