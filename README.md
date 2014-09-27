@@ -59,8 +59,8 @@ The internet is populated with so many client-side frameworks from Backbone.js t
 
 ## API
 
-### achilles.Object (inherits events.EventEmitter)
-
+### achilles.Object 
+*Inherits events.EventEmitter*
 To create a class called `Person` with properties such as `name`, `height`, `dateOfBirth`, `alive` and `children`, as well as methods such as `reset()`:
 
 ```js
@@ -107,27 +107,12 @@ this.define("favouriteNumbers", [Number]); // An array of Numbers
 this.define("children", [Person]); // An array of People
 ```
 
-To instantiate a class, do:
-```js
-var George = new Person("George");
-```
-
-To get a property, do:
-```js
-George.age;
-```
-
-To set a  property, do:
-```js
-George.age = 13;
-```
-
 A TypeError will be raised if a property is set to a value that does not match the type.
 
-### achilles.View (inherits achilles.Object)
-
+### achilles.View
+*Inherits achilles.Object*
 ```js
-var MyApp = new achilles.View("main"); // Registers events on the <main> element
+var MyApp = new achilles.View("#container"); // Registers events on the <main> element
 
 MyApp.on("click button.submit", function(e) {
     // A button with the class `submit`, inside `<main>`, was clicked
@@ -138,21 +123,9 @@ Main.on("click", function(e) {
 });
 ```
 
-#### No need for boilerplate code
-Users of jQuery et al. might have realised that in the previous example there was no boilerplate code. In jQuery et al. you need to wait for the DOM to load:
-```js
-$(document).ready(function() {
-    // Code here
-});
-```
-Because of *achilles*'s event-driven architecture, that is not the case here.
+N.B. There is no need for boilerplate code such as `window.onload` or `$.ready()`.
 
-#### Instantiating
-To create an *achilles.View*, pass a CSS selector into its constructor, e.g:
-```js
-var MyApp = new achilles.View("#container");
-```
-Here *achilles.View* is assigned to the event with the id *container*.
+The constructor accepts either a CSS selector or an element or nothing.
 
 #### Events
 To declare an events, on the `#container` element, use the *on* method:
@@ -163,10 +136,12 @@ MyApp.on("click", function(e) {
 ```
 The first parameter of *on* method is an event name, and the second is a function, that itself takes an Event argument. The Event argumenet isn't strictly necessary, but it provides information about the event.
 
-#### Event delegation
-You will rarely only need to put events on the root element, in this case `#container`. To declare event handlers for children of the root element, use event delegation:
+#### Putting Events on Child Element
+You will rarely only need to put events on the root element, in this case `#container`. To declare event handlers for children of the root element:
 ```js
 MyApp.on("click button.reload", function(e) {
 
 });
 ```
+
+N.B. This uses event delegation.
