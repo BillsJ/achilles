@@ -3,6 +3,43 @@ achilles [![NPM Module](http://img.shields.io/npm/v/achilles.svg?style=flat-squa
 
 A lightweight framework for structured web applications.
 
+
+### tl;dr Example
+```js
+var achilles = require("achilles");
+var mongodb = require("achilles-mongodb");
+
+function Book() {
+    achilles.Model.call(this);
+
+    this.define("title", String);
+    this.define("author", String);
+    this.define("rating", Number);
+    this.define("datePublished", Date);
+    this.define("readership", [String]);
+}
+
+Book.prototype.getTotalReaders = function() {
+    return this.readership.length;
+};
+
+util.inherits(Book, achilles.Model);
+
+Book.connection = new mongodb.Connection("mongodb://127.0.0.1:27017/test");
+
+var book = new Book();
+book.title = "Harry Potter";
+book.author = "J.K. Rowling";
+
+book.save(function(err, book) {
+   // AFTER SAVE
+});
+
+Book.getById("DUMMY_ID", function(err, book) {
+   // AFTER GET   
+});
+```
+
 ### Install
 ```bash
 npm install achilles --save
