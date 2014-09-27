@@ -105,6 +105,32 @@ this.define("children", [Person]); // An array of People
 
 A TypeError will be raised if a property is set to a value that does not match the type.
 
+### achilles.Model
+*Inherits achilles.Model*
+
+The constructor has to have a `connection` property, which accepts an adapter. An adapter allows you to retrieve and save data to and from a database. Achilles provides a REST adapter built-in:
+
+```js
+Book.connection = new achilles.Connection("/");
+```
+
+Other adapaters include a [MongoDB adapter](https://github.com/TheMuses/achilles-mongodb).
+
+#### getById()
+A static method that takes an id and a callback.
+
+### delById()
+A static method that takes an id of an object to delete and a callback.
+
+#### save()
+Saves the object to the database; it accepts a callback that is called after the operation is done.
+
+#### refresh()
+Refreshes its conents.
+
+### del()
+Deletes the object.
+
 ### achilles.View
 *Inherits achilles.Object*
 
