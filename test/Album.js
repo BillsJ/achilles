@@ -31,6 +31,6 @@ function Album(name) {
 util.inherits(Album, achilles.Model);
 
 Album.idAttribute = "id";
-Album.URL = "http://jsonplaceholder.typicode.com/albums";
+Album.connection = new achilles.Connection("http://jsonplaceholder.typicode.com/albums");
 
 module.exports = Album;

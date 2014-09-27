@@ -82,7 +82,6 @@ describe("achilles.Service", function() {
 	});
 	it("should work with creating nested resources", function(cb) {
 		request.post({url:"http://localhost:5000/1/photos", json:{title:"Hi"}}, function(err, res, body) {
-			console.log(body);
 			assert(res.statusCode === 201);
 			assert(body.id === "51");
 			cb();
