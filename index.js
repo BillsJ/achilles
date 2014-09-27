@@ -10,6 +10,7 @@ achilles.Router = require("./lib/Router");
 achilles.Service = require("./lib/Service");
 achilles.User = require("./lib/User");
 achilles.Group = require("./lib/Group");
+achilles.Connection = require("./lib/Connection");
 
 achilles.Model.prototype.toJSON = function() {
 	if(!this._id && this.container) {

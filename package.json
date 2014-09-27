@@ -1,6 +1,6 @@
 {
   "name": "achilles",
-  "version": "0.18.7",
+  "version": "0.20.0",
   "description": "Lightweight framework for structured web applications",
   "repository": "https://github.com/TheMuses/achilles",
   "main": "index.js",
@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "browserify": "~4.1.8",
-    "gulp-jsdoc": "~0.1.4",
     "gulp": "~3.8.5",
     "serve-static": "~1.3.0",
     "cookie-parser": "~1.3.2",
