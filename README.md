@@ -61,6 +61,7 @@ The internet is populated with so many client-side frameworks from Backbone.js t
 
 ### achilles.Object 
 *Inherits events.EventEmitter*
+
 To create a class called `Person` with properties such as `name`, `height`, `dateOfBirth`, `alive` and `children`, as well as methods such as `reset()`:
 
 ```js
@@ -111,6 +112,7 @@ A TypeError will be raised if a property is set to a value that does not match t
 
 ### achilles.View
 *Inherits achilles.Object*
+
 ```js
 var MyApp = new achilles.View("#container"); // Registers events on the <main> element
 
