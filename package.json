@@ -1,6 +1,6 @@
 {
   "name": "achilles",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "Lightweight framework for structured web applications",
   "repository": "https://github.com/TheMuses/achilles",
   "main": "index.js",
@@ -49,6 +49,6 @@
     "express": "~4.9.5"
   },
   "peerDependencies": {
-    "express":"4.x"
+    "express": "4.x"
   }
 }
