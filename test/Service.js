@@ -1,18 +1,20 @@
 var achilles = require("../");
 var assert = require("assert");
-var http = require("http");
 var request = require("request");
 var Album = require("./Album");
 var bodyParser = require("body-parser");
 var nock = require("nock");
+var express = require("express");
 
 var service = new achilles.Service(Album);
-service.use(bodyParser.json());
 var server;
 
 describe("achilles.Service", function() {
 	before(function(cb) {
-		server = http.createServer(service.server()).listen(5000, cb);
+		var app = express();
+		app.use(bodyParser.json());
+		app.use(service);
+		server = app.listen(5000, cb);
 	});
 	it("should work with /", function(done) {
 		request.get({url:"http://localhost:5000/", json:true}, function(err, res, body) {
@@ -95,15 +97,19 @@ describe("achilles.Service", function() {
 describe("achilles.Service (Permissions System)", function() {
 	before(function(cb) {
 		nock.restore();
-		service = new achilles.Service(Album, {silent:true});
+		service = new achilles.Service(Album);
 
-		service.use(function(req, res, next) {
+		var app = express();
+
+		app.use(function(req, res, next) {
 			req.user = new achilles.User();
 			req.user.roles = ["Album:get:5", "Album:get:6"];
 			next();
 		});
 
-		server = http.createServer(service.server()).listen(5000, cb);
+		app.use(service);
+		
+		server = app.listen(5000, cb);
 	});
 	it("should only return records permission has been granted to see", function(cb) {
 		request.get({url:"http://localhost:5000/", json:true}, function(err, res, body) {
