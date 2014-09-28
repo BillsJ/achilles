@@ -24,7 +24,6 @@
     "request": "~2.37.0",
     "accepts": "~1.0.7",
     "response-redirect": "0.0.1",
-    "simple-router": "~0.3.0",
     "connect-flash": "~0.1.1",
     "node-http-error": "~0.2.0",
     "through2": "~0.6.1",
@@ -46,6 +45,7 @@
     "passport-local": "~1.0.0",
     "passport-http": "~0.2.2",
     "nock": "~0.46.0",
-    "mocha": "~1.21.4"
+    "mocha": "~1.21.4",
+    "express": "~4.9.5"
   }
 }
