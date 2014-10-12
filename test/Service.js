@@ -73,7 +73,7 @@ describe("achilles.Service", function() {
 				"url": "http://placehold.it/600/92c952",
 				"thumbnailUrl": "http://placehold.it/150/30ac17"
 			})
-			.post('/albums/1/photos', {})
+			.post('/albums/1/photos')
 			.reply(201, {
 				"id":"51"
 			});
