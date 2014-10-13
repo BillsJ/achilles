@@ -7,13 +7,12 @@ addons:
     repo_token: 37368877390b56df3dc3ee9f44c325490bfa4124d3f3b4128ef2593869145a86
 after_script:
   - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && cat coverage/lcov.info | codeclimate'
-notifications:
-  slack:
-    secure: EYsDK6x/ez0y8R1VhrA1qA5sMK5sgeokt4LY41t5jbgEGCt+8KYXDWqj9xcqrhvwIYXG6iUiNavTTT7jBHb2QxOeH6HyMtIEq3GOBxRNZ5beDJXK1HzYRCTruvik3Ogxg5Nwye2rf6BxCOeu9d7z12IjOSTt2rZMtUukYNDpBhk=
 deploy:
   provider: npm
-  email: "hashan.punchihewa@gmail.com"
-  api_key: "x28n90Y4CrvfNcgJhXmtBgTIEFJxHHuUTkyef0nKXxJPL+gcwDpxrnCB3vHWIjcrRYQvfAqXSJ4Kh/2zj/dlE74UdVoiEDYbtBbNw2qU/duRQRMnabLZK9UGhdBskyvk30bMMckJlUdzJGMTKJtDS3HVJFYU51k9gu/gvS7CDeE="
+  email: hashan.punchihewa@gmail.com
+  api_key:
+    secure: Xtw/614l5c1sN4VOoNGAaOXlBONFxiYEER6+19ScQf2RORIsUWUCshWWqcbZlOpt/5jU6QOUiaQFpPMom+eSW0+0aup2YnMPNsBDzcFuOMuBZJB9A9CMwRkE0QXbpr6S6BNjhrRz7XTmFfIfb6bxdimxWLjbPOd7e0VSW6Bu4PQ=
   on:
     tags: true
+    repo: TheMuses/achilles
     all_branches: true
