@@ -70,10 +70,11 @@ describe("achilles.Object.prototype.remove", function() {
 	it("setting an array of sub-objects, should add .container property", function() {
 		var song = new Song("Whatever");
 		album.songs = [song];
-		assert(song.container === album.songs);
+		assert(song.container instanceof Array);
 	});
 	it("should remove a song from its container", function() {
 		var song = new Song("Whatever 2");
+		album.songs = [];
 		album.songs.push(song);
 		song.remove();
 		assert(album.songs.indexOf(song) === -1);
