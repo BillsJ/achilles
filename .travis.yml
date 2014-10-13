@@ -1,18 +1,18 @@
 language: node_js
 node_js:
+- '0.11'
 - '0.10'
 before_install: npm install -g istanbul codeclimate-test-reporter
 addons:
   code_climate:
     repo_token: 37368877390b56df3dc3ee9f44c325490bfa4124d3f3b4128ef2593869145a86
 after_script:
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && cat coverage/lcov.info | codeclimate'
+- '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && cat coverage/lcov.info | codeclimate'
 deploy:
   provider: npm
   email: hashan.punchihewa@gmail.com
   api_key:
-    secure: Xtw/614l5c1sN4VOoNGAaOXlBONFxiYEER6+19ScQf2RORIsUWUCshWWqcbZlOpt/5jU6QOUiaQFpPMom+eSW0+0aup2YnMPNsBDzcFuOMuBZJB9A9CMwRkE0QXbpr6S6BNjhrRz7XTmFfIfb6bxdimxWLjbPOd7e0VSW6Bu4PQ=
+    secure: D7Wwx+J6tg7GGD4CWo7Z4/kIoMnkpdaBj1X6S01hEi4RKK0PDuvYDkbUa2ML02Aa+W5DgRIe/WBIMNPvVPokATm7Dr0B7gopXwuMDlWp2PH9R/SvUayRuI+UTPPJYQpRhnKkV7w6Dy/LDClfUFxtOC3dTHWvI4arymG02plJms0=
   on:
     tags: true
     repo: TheMuses/achilles
-    all_branches: true
