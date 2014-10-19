@@ -53,6 +53,9 @@ describe("achilles.Service", function() {
 	});
 	it("should support document deletion", function(cb) {
 		request.del("http://localhost:5000/1", function(err, res, body) {
+			if(err) {
+				throw err;
+			}
 			assert(res.statusCode === 204);
 			cb();
 		});
@@ -108,7 +111,7 @@ describe("achilles.Service (Permissions System)", function() {
 		});
 
 		app.use(service);
-		
+
 		server = app.listen(5000, cb);
 	});
 	it("should only return records permission has been granted to see", function(cb) {
