@@ -1,6 +1,6 @@
 {
   "name": "achilles",
-  "version": "0.23.41",
+  "version": "0.23.42",
   "description": "Lightweight framework for structured web applications",
   "repository": "https://github.com/TheMuses/achilles",
   "main": "index.js",
